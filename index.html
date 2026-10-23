@@ -46,8 +46,12 @@
     <main class="content-area">
       <header class="content-header">
         <h1 id="current-view-title">대시보드</h1>
-        <div class="header-status">
-          <span class="status-indicator"></span> 로컬 파일 모드
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-load-demo" type="button" title="별도 JSON 파일 없이 내장된 데모 프로젝트 데이터를 즉시 복원합니다">🎮 데모 데이터 복원</button>
+          <button class="btn btn-text btn-sm" id="btn-clear-all-data" type="button" title="저장된 모든 데이터를 비우고 빈 상태로 초기화합니다">🗑️ 빈 상태로 초기화</button>
+          <div class="header-status">
+            <span class="status-indicator"></span> <span id="header-mode-label">로컬 파일 모드 (데모 적용됨)</span>
+          </div>
         </div>
       </header>
 
@@ -74,6 +78,19 @@
               <h3>미해결 결함</h3>
               <p class="metric-value" id="dash-unresolved-bugs">0</p>
               <span class="metric-desc" id="dash-unresolved-bugs-desc">전체 프로젝트 기준</span>
+            </div>
+          </div>
+
+          <div class="card demo-banner-card">
+            <div class="demo-banner">
+              <div class="demo-banner-text">
+                <h3>🎮 즉시 체험 가능한 데모 모드 (파일 업로드 불필요)</h3>
+                <p>별도의 JSON 백업 파일을 다운로드·로드하지 않아도 웹앱의 모든 기능을 바로 확인하실 수 있도록 <code>test/</code> 폴더의 샘플 프로젝트(<strong>Four Footsteps - 네 발자국</strong>) 데이터가 기본 로드되어 있습니다. 왼쪽 메뉴를 눌러 이슈, 테스트 케이스, 실행 결과, 버그 리포트 및 메일 초안을 바로 확인해 보세요.</p>
+              </div>
+              <div class="demo-banner-actions">
+                <button class="btn btn-primary" id="btn-dash-load-demo" type="button">🔄 데모 데이터 기본값으로 복원</button>
+                <button class="btn btn-secondary" id="btn-dash-clear-demo" type="button">빈 상태로 새로 시작</button>
+              </div>
             </div>
           </div>
 
@@ -122,7 +139,8 @@
               <h2>이슈 마크다운 파일(Issues.md) 불러오기</h2>
               <div class="file-input-wrapper">
                 <input type="file" id="md-file-input" accept=".md,text/markdown,text/plain" style="display: none;">
-                <button class="btn btn-primary" id="btn-select-file">📂 .md 파일 선택</button>
+                <button class="btn btn-secondary" id="btn-load-sample-md" type="button">🧪 샘플 Issues.md 바로 적용</button>
+                <button class="btn btn-primary" id="btn-select-file" type="button">📂 .md 파일 선택</button>
               </div>
             </div>
             <p class="card-subtitle">기존 프로젝트의 QA 이슈 목록 파일(.md)을 선택하면 브라우저에서 구조를 분석합니다.</p>
@@ -265,7 +283,10 @@
           </div>
 
           <div class="card">
-            <div class="card-header"><h2>외부 AI 결과 붙여넣기</h2></div>
+            <div class="card-header">
+              <h2>외부 AI 결과 붙여넣기</h2>
+              <button class="btn btn-secondary" id="btn-load-sample-ai-json" type="button">🧪 샘플 AI 결과 JSON 넣기</button>
+            </div>
             <p class="card-subtitle">Gemini, ChatGPT, Claude 등에서 생성한 JSON을 붙여넣으세요. 파싱 후 미리보기에서 필드를 수정하고 등록할 수 있습니다.</p>
             <textarea id="tc-ai-json" class="tc-large-textarea" rows="10" placeholder='{"testCases":[{"title":"플레이어 점프 재현 테스트","purpose":"점프 입력 시 바닥을 통과하는 문제를 재현한다","preconditions":["Windows 빌드 실행","테스트 구역 진입"],"steps":["플레이어를 평평한 바닥에 세운다","점프 키를 한 번 누른다"],"expectedResults":["플레이어가 바닥을 통과하지 않는다"],"relatedIssueIds":["#1"],"priority":"High","category":"재현 테스트","platform":"Windows","status":"Draft"}]}'> </textarea>
             <div class="form-actions"><button class="btn btn-primary" id="btn-parse-ai-json" type="button">JSON 검수 및 미리보기</button><span id="tc-json-status" class="inline-status" role="status"></span></div>

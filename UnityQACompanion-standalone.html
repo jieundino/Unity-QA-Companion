@@ -160,12 +160,68 @@ body {
   font-weight: 700;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .header-status {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.demo-banner-card {
+  background: linear-gradient(135deg, #FFF7F3 0%, #FFFFFF 100%);
+  border: 1px solid #FFD6C7;
+}
+
+.demo-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.demo-banner-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.demo-banner-text h3 {
+  font-size: 15px;
+  color: var(--primary-orange-hover);
+  margin-bottom: 6px;
+}
+
+.demo-banner-text p {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.demo-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.file-input-wrapper {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .status-indicator {
@@ -745,8 +801,12 @@ body {
     <main class="content-area">
       <header class="content-header">
         <h1 id="current-view-title">대시보드</h1>
-        <div class="header-status">
-          <span class="status-indicator"></span> 로컬 파일 모드
+        <div class="header-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-load-demo" type="button" title="별도 JSON 파일 없이 내장된 데모 프로젝트 데이터를 즉시 복원합니다">🎮 데모 데이터 복원</button>
+          <button class="btn btn-text btn-sm" id="btn-clear-all-data" type="button" title="저장된 모든 데이터를 비우고 빈 상태로 초기화합니다">🗑️ 빈 상태로 초기화</button>
+          <div class="header-status">
+            <span class="status-indicator"></span> <span id="header-mode-label">로컬 파일 모드 (데모 적용됨)</span>
+          </div>
         </div>
       </header>
 
@@ -773,6 +833,19 @@ body {
               <h3>미해결 결함</h3>
               <p class="metric-value" id="dash-unresolved-bugs">0</p>
               <span class="metric-desc" id="dash-unresolved-bugs-desc">전체 프로젝트 기준</span>
+            </div>
+          </div>
+
+          <div class="card demo-banner-card">
+            <div class="demo-banner">
+              <div class="demo-banner-text">
+                <h3>🎮 즉시 체험 가능한 데모 모드 (파일 업로드 불필요)</h3>
+                <p>별도의 JSON 백업 파일을 다운로드·로드하지 않아도 웹앱의 모든 기능을 바로 확인하실 수 있도록 <code>test/</code> 폴더의 샘플 프로젝트(<strong>Four Footsteps - 네 발자국</strong>) 데이터가 기본 로드되어 있습니다. 왼쪽 메뉴를 눌러 이슈, 테스트 케이스, 실행 결과, 버그 리포트 및 메일 초안을 바로 확인해 보세요.</p>
+              </div>
+              <div class="demo-banner-actions">
+                <button class="btn btn-primary" id="btn-dash-load-demo" type="button">🔄 데모 데이터 기본값으로 복원</button>
+                <button class="btn btn-secondary" id="btn-dash-clear-demo" type="button">빈 상태로 새로 시작</button>
+              </div>
             </div>
           </div>
 
@@ -821,7 +894,8 @@ body {
               <h2>이슈 마크다운 파일(Issues.md) 불러오기</h2>
               <div class="file-input-wrapper">
                 <input type="file" id="md-file-input" accept=".md,text/markdown,text/plain" style="display: none;">
-                <button class="btn btn-primary" id="btn-select-file">📂 .md 파일 선택</button>
+                <button class="btn btn-secondary" id="btn-load-sample-md" type="button">🧪 샘플 Issues.md 바로 적용</button>
+                <button class="btn btn-primary" id="btn-select-file" type="button">📂 .md 파일 선택</button>
               </div>
             </div>
             <p class="card-subtitle">기존 프로젝트의 QA 이슈 목록 파일(.md)을 선택하면 브라우저에서 구조를 분석합니다.</p>
@@ -964,7 +1038,10 @@ body {
           </div>
 
           <div class="card">
-            <div class="card-header"><h2>외부 AI 결과 붙여넣기</h2></div>
+            <div class="card-header">
+              <h2>외부 AI 결과 붙여넣기</h2>
+              <button class="btn btn-secondary" id="btn-load-sample-ai-json" type="button">🧪 샘플 AI 결과 JSON 넣기</button>
+            </div>
             <p class="card-subtitle">Gemini, ChatGPT, Claude 등에서 생성한 JSON을 붙여넣으세요. 파싱 후 미리보기에서 필드를 수정하고 등록할 수 있습니다.</p>
             <textarea id="tc-ai-json" class="tc-large-textarea" rows="10" placeholder='{"testCases":[{"title":"플레이어 점프 재현 테스트","purpose":"점프 입력 시 바닥을 통과하는 문제를 재현한다","preconditions":["Windows 빌드 실행","테스트 구역 진입"],"steps":["플레이어를 평평한 바닥에 세운다","점프 키를 한 번 누른다"],"expectedResults":["플레이어가 바닥을 통과하지 않는다"],"relatedIssueIds":["#1"],"priority":"High","category":"재현 테스트","platform":"Windows","status":"Draft"}]}'> </textarea>
             <div class="form-actions"><button class="btn btn-primary" id="btn-parse-ai-json" type="button">JSON 검수 및 미리보기</button><span id="tc-json-status" class="inline-status" role="status"></span></div>
@@ -1087,8 +1164,9 @@ body {
 // Unity QA Companion - STEP 3: localStorage 기반 프로젝트 및 이슈 관리
 // 외부 서버/DB를 사용하지 않습니다. 저장 데이터는 현재 브라우저에 보관됩니다.
 
-document.addEventListener('DOMContentLoaded', () => {
+function initUnityQaCompanion() {
   const STORAGE_KEY = 'unityQaCompanion.data';
+  const EMPTY_MODE_KEY = 'unityQaCompanion.emptyMode';
   const SCHEMA_VERSION = 4;
   const $ = (id) => document.getElementById(id);
 
@@ -2115,7 +2193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   backupActions.innerHTML = `<div class="card-header"><h2>내보내기 및 백업</h2></div><p class="card-subtitle">내보내기는 브라우저에서 처리하며 저장된 로컬 데이터를 변경하지 않습니다.</p>
     <div class="export-controls"><label>Markdown 범위<select id="export-markdown-scope"><option value="project">전체 프로젝트</option><option value="issues">이슈 목록</option><option value="issue">선택한 이슈</option><option value="testCases">테스트 케이스 목록</option><option value="testRuns">테스트 실행 이력</option><option value="bugReports">버그 리포트</option><option value="mailDrafts">메일 초안</option></select></label><label>이슈 선택<select id="export-issue-select"><option value="">이슈 선택</option></select></label><button class="btn btn-secondary" id="btn-export-markdown" type="button">Markdown 다운로드</button></div>
     <div class="export-controls"><span>CSV 내보내기</span><button class="btn btn-secondary" data-export-csv="issues" type="button">이슈 목록 CSV</button><button class="btn btn-secondary" data-export-csv="testCases" type="button">테스트 케이스 CSV</button><button class="btn btn-secondary" data-export-csv="testRuns" type="button">테스트 실행 CSV</button><button class="btn btn-secondary" data-export-csv="bugReports" type="button">버그 리포트 CSV</button></div>
-    <div class="export-controls"><button class="btn btn-primary" id="btn-export-json" type="button">전체 JSON 백업 다운로드</button><button class="btn btn-secondary" id="btn-import-json" type="button">JSON 백업 복원</button><span id="export-status" class="inline-status" role="status"></span><input id="json-backup-input" type="file" accept="application/json,.json" hidden></div>`;
+    <div class="export-controls"><button class="btn btn-primary" id="btn-export-json" type="button">전체 JSON 백업 다운로드</button><button class="btn btn-secondary" id="btn-import-json" type="button">JSON 백업 복원</button><button class="btn btn-secondary" id="btn-restore-demo-backup" type="button">🎮 데모 백업 즉시 복원</button><span id="export-status" class="inline-status" role="status"></span><input id="json-backup-input" type="file" accept="application/json,.json" hidden></div>`;
   projectForm.parentElement.appendChild(backupActions);
   function fileSafe(value){return String(value||'project').normalize('NFKC').replace(/[<>:"/\\|?*\x00-\x1F]/g,'_').replace(/[. ]+$/g,'').trim().slice(0,80)||'project';}
   function downloadFile(name,content,type){try{const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return true;}catch(error){$('export-status').textContent=`다운로드 실패: ${error.message}`;return false;}}
@@ -2194,17 +2272,956 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.readAsText(file, 'UTF-8');
   });
 
-  // 초기 화면: 예시 데이터를 자동 삽입하지 않습니다.
-  loadDatabase();
-  renderProjectSelector();
-  fillProjectForm(activeProject());
-  renderIssues();
-  renderTestCases();
-  renderExecutionView();
-  renderBugReportList();
-  $('run-date').value = new Date().toISOString().slice(0,16);
-});
+  // 내장 데모 데이터 (test/ 폴더의 Issues.md, 외부 AI 결과 JSON, 전체 백업 JSON 탑재)
+  const DEMO_ISSUES_MD = `## [Open] #1 플레이어 점프 시 바닥 뚫림
 
+
+- 재현 경로: 스페이스 연타
+
+
+## [Closed] #2 사운드 음소거 미작동`;
+
+  const DEMO_AI_TESTCASES_JSON = {
+    testCases: [
+      {
+        title: "플레이어 점프 시 바닥 통과 재현 테스트",
+        purpose: "점프 입력 시 플레이어가 바닥을 통과하는 문제가 발생하는지 확인한다.",
+        preconditions: [
+          "Windows 데스크톱 빌드를 실행한다.",
+          "플레이어가 이동할 수 있는 테스트 구역에 진입한다.",
+          "바닥 충돌이 발생하는 위치에 플레이어를 둔다."
+        ],
+        steps: [
+          "플레이어를 평평한 바닥 위에 위치시킨다.",
+          "점프 입력을 한 번 수행한다.",
+          "플레이어의 이동과 바닥 충돌 상태를 관찰한다."
+        ],
+        expectedResults: [
+          "플레이어가 의도하지 않게 바닥을 통과하지 않는다.",
+          "점프 결과와 충돌 상태를 확인할 수 있다."
+        ],
+        relatedIssueIds: ["#1"],
+        priority: "High",
+        category: "재현 테스트",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: [
+          "실제 점프 입력 키는 게임 설정에서 확인이 필요하다.",
+          "바닥 충돌의 구체적인 기대 동작은 게임 설계에 따라 검증해야 한다."
+        ]
+      },
+      {
+        title: "점프 키 빠른 연속 입력 테스트",
+        purpose: "짧은 시간 안에 반복 입력했을 때 비정상적인 이동이나 충돌이 발생하는지 확인한다.",
+        preconditions: [
+          "Windows 데스크톱 빌드를 실행한다.",
+          "플레이어가 바닥 위에 있는지 확인한다."
+        ],
+        steps: [
+          "점프 입력을 빠르게 여러 번 반복한다.",
+          "플레이어의 위치와 바닥 충돌 상태를 관찰한다.",
+          "입력 종료 후 정상적으로 조작할 수 있는지 확인한다."
+        ],
+        expectedResults: [
+          "입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.",
+          "입력 종료 후 게임이 정상적으로 반응한다."
+        ],
+        relatedIssueIds: ["#1"],
+        priority: "Medium",
+        category: "빠른 연속 입력",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: [
+          "반복 입력 허용 여부와 점프 재사용 조건은 검증이 필요하다."
+        ]
+      }
+    ]
+  };
+
+  const DEMO_BACKUP_DATA = {
+    schemaVersion: 4,
+    backupCreatedAt: "2026-10-22T04:10:28.600Z",
+    projects: [
+      {
+        id: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        name: "Four Footsteps",
+        description: "Unity/C# 기반 2D 내러티브 게임 '네 발자국'",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        createdAt: "2026-10-21",
+        updatedAt: "2026-10-22T02:34:49.503Z"
+      }
+    ],
+    issues: [
+      {
+        id: "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        number: "1",
+        title: "플레이어 점프 시 바닥 뚫림",
+        status: "Open",
+        description: "- 재현 경로: 스페이스 연타",
+        rawMarkdown: "## [Open] #1 플레이어 점프 시 바닥 뚫림\n\n\n- 재현 경로: 스페이스 연타\n\n",
+        source: "markdown",
+        modified: false,
+        sourceFile: "Issues.md",
+        lineStart: 1,
+        warnings: [],
+        createdAt: "2026-10-21T07:59:08.682Z",
+        updatedAt: "2026-10-21T07:59:08.682Z"
+      },
+      {
+        id: "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        number: "2",
+        title: "사운드 음소거 미작동",
+        status: "Closed",
+        description: "",
+        rawMarkdown: "## [Closed] #2 사운드 음소거 미작동",
+        source: "markdown",
+        modified: false,
+        sourceFile: "Issues.md",
+        lineStart: 7,
+        warnings: [
+          "이슈의 세부 설명(본문)이 비어 있습니다."
+        ],
+        createdAt: "2026-10-21T07:59:08.682Z",
+        updatedAt: "2026-10-21T07:59:08.682Z"
+      },
+      {
+        id: "issue-7f7c30db-964d-434d-8fb3-1af83361c785",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        number: "3",
+        title: "PuzzleMemoryManager 이름 치환 시점 오류",
+        status: "In Progress",
+        description: "- 재현 경로: 퍼즐 가방 UI에서 회상 텍스트를 표시할 때, 플레이어 이름 또는 고양이 이름이 사용자가 입력한 실제 이름이 아니라 초기 임시값으로 표시되는 문제가 있었습니다.\n이로 인해 사용자가 프롤로그에서 이름을 설정했음에도, 회상 텍스트에는 변경 전 이름이 반영될 수 있었습니다.",
+        rawMarkdown: "",
+        source: "manual",
+        modified: true,
+        warnings: [],
+        createdAt: "2026-10-21T07:59:23.854Z",
+        updatedAt: "2026-10-21T08:06:52.969Z"
+      }
+    ],
+    testCases: [
+      {
+        id: "tc-5e6e67e3-5996-4437-95e1-b86a32073c5b",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "플레이어 점프 시 바닥 통과 재현 테스트",
+        purpose: "점프 입력 시 플레이어가 바닥을 통과하는 문제가 발생하는지 확인한다.",
+        preconditions: [
+          "Windows 데스크톱 빌드를 실행한다.",
+          "플레이어가 이동할 수 있는 테스트 구역에 진입한다.",
+          "바닥 충돌이 발생하는 위치에 플레이어를 둔다."
+        ],
+        steps: [
+          "플레이어를 평평한 바닥 위에 위치시킨다.",
+          "점프 입력을 한 번 수행한다.",
+          "플레이어의 이동과 바닥 충돌 상태를 관찰한다."
+        ],
+        expectedResults: [
+          "플레이어가 의도하지 않게 바닥을 통과하지 않는다.",
+          "점프 결과와 충돌 상태를 확인할 수 있다."
+        ],
+        relatedIssueIds: ["issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247"],
+        priority: "High",
+        category: "재현 테스트",
+        platform: "Windows",
+        status: "Draft",
+        source: "external-ai",
+        createdAt: "2026-10-21T08:09:37.249Z",
+        updatedAt: "2026-10-21T08:14:59.688Z"
+      },
+      {
+        id: "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "점프 키 빠른 연속 입력 테스트",
+        purpose: "짧은 시간 안에 반복 입력했을 때 비정상적인 이동이나 충돌이 발생하는지 확인한다.",
+        preconditions: [
+          "Windows 데스크톱 빌드를 실행한다.",
+          "플레이어가 바닥 위에 있는지 확인한다."
+        ],
+        steps: [
+          "점프 입력을 빠르게 여러 번 반복한다.",
+          "플레이어의 위치와 바닥 충돌 상태를 관찰한다.",
+          "입력 종료 후 정상적으로 조작할 수 있는지 확인한다."
+        ],
+        expectedResults: [
+          "입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.",
+          "입력 종료 후 게임이 정상적으로 반응한다."
+        ],
+        relatedIssueIds: ["issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247"],
+        priority: "Medium",
+        category: "빠른 연속 입력",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["반복 입력 허용 여부와 점프 재사용 조건은 검증이 필요하다."],
+        source: "external-ai",
+        createdAt: "2026-10-21T08:09:37.249Z",
+        updatedAt: "2026-10-21T08:09:48.178Z"
+      },
+      {
+        id: "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
+        purpose: "프롤로그에서 설정한 플레이어 및 고양이 이름이 퍼즐 가방 UI의 회상 텍스트에 초기 임시값이 아닌 실제 입력값으로 올바르게 반영되는지 확인합니다.",
+        preconditions: [
+          "게임이 정상 실행된 상태",
+          "프롤로그 진행 중 플레이어 및 고양이 이름을 입력하는 단계에 도달함 (검증 필요)"
+        ],
+        steps: [
+          "프롤로그 진행 중 플레이어와 고양이 이름을 임의의 실제 이름으로 입력하고 완료합니다.",
+          "이후 퍼즐 가방 UI를 열어 회상 텍스트 항목을 선택합니다."
+        ],
+        expectedResults: [
+          "회상 텍스트 내 플레이어 이름과 고양이 이름이 초기 임시값이 아니라 사용자가 입력한 실제 이름으로 표시됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "High",
+        category: "재현 테스트",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: [
+          "프롤로그에서 플레이어와 고양이 이름을 입력하는 단계가 존재함",
+          "퍼즐 가방 UI를 통해 회상 텍스트를 확인할 수 있는 경로가 존재함"
+        ],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-d80438f3-9e48-4f6f-bd32-39d59e65c332",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "프롤로그 이름 변경 및 퍼즐 가방 UI 빠른 연속 진입 시 이름 치환 타이밍 검증",
+        purpose: "이름 입력 직후나 퍼즐 가방 UI를 빠르게 반복해서 여닫을 때, PuzzleMemoryManager의 치환 타이밍 지연으로 인해 임시값이 노출되는지 확인합니다.",
+        preconditions: ["프롤로그 이름 입력 완료 직전 또는 직후 상태"],
+        steps: [
+          "이름 입력 완료 후 곧바로 퍼즐 가방 UI를 마우스나 키보드로 빠르게 연속해서 열고 닫기를 반복합니다.",
+          "마지막으로 퍼즐 가방 UI를 연 상태로 유지하여 회상 텍스트를 확인합니다."
+        ],
+        expectedResults: [
+          "빠른 연속 입력 및 UI 토글 상황에서도 회상 텍스트 내 이름이 임시값으로 롤백되지 않고 올바른 입력값으로 고정되어 표시됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "Medium",
+        category: "빠른 연속 입력",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["UI 열기/닫기 인터랙션이 빈번하게 발생할 때 비동기 로딩이나 초기화 타이밍 이슈가 발생할 수 있음"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-93c67452-b17d-4911-9501-c7063d01a378",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "이름 글자 수 경계값(최소/최대) 입력 시 회상 텍스트 치환 검증",
+        purpose: "플레이어 및 고양이 이름을 시스템에서 허용하는 최소 글자 수 또는 최대 글자 수로 설정했을 때, 회상 텍스트 치환 시 문자열 처리 오류나 깨짐 현상이 없는지 확인합니다.",
+        preconditions: ["이름 입력 UI 진입 상태"],
+        steps: [
+          "플레이어 및 고양이 이름을 허용된 최소 길이(예: 1자)로 입력하고 완료 후 퍼즐 가방 UI의 회상 텍스트를 확인합니다.",
+          "게임을 재시작하거나 초기화하여 최대 길이(예: 시스템 허용 최대 글자 수)로 이름을 입력하고 회상 텍스트를 확인합니다."
+        ],
+        expectedResults: [
+          "경계값 길이의 이름이 회상 텍스트 내에서 잘림이나 오탈자 없이 정상적으로 치환되어 출력됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "Low",
+        category: "경계값",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["이름 입력에 대한 글자 수 제한(최소/최대 길이) 정책이 존재함"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-31e22cdd-96ed-4f97-940d-1c02ade818db",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "게임 진행 중 이름 변경 이벤트 발생 시 회상 텍스트 실시간 반영 상태 전환 검증",
+        purpose: "게임 내에서 이름이 변경되는 이벤트나 설정 변경 기능이 있을 때, 이미 로드되었거나 열려 있는 퍼즐 가방 UI의 회상 텍스트가 실시간으로 갱신되는지 확인합니다.",
+        preconditions: ["프롤로그 이후 게임 진행 중 이름 변경이 가능한 구간 또는 설정 메뉴 진입 가능 상태"],
+        steps: [
+          "퍼즐 가방 UI를 열어둔 상태이거나 닫은 상태에서, 게임 내 이벤트나 설정을 통해 플레이어/고양이 이름을 새로운 값으로 변경합니다.",
+          "퍼즐 가방 UI를 다시 열거나 실시간으로 텍스트 영역을 주시하여 반영 여부를 확인합니다."
+        ],
+        expectedResults: [
+          "이름 변경 직후 또는 UI 재진입 시 PuzzleMemoryManager가 변경된 이름을 즉시 감지하여 회상 텍스트에 올바르게 반영합니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "Medium",
+        category: "상태 전환",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["게임 플레이 도중 이름을 변경할 수 있는 기능이나 이벤트 트리거가 존재함"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-9eb9aeaf-e7f4-4bb8-b3f6-60d63c2c8af5",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "이름 설정 및 회상 텍스트 활성화 후 세이브/로드 시 이름 유지 검증",
+        purpose: "이름을 설정하고 회상 텍스트가 해금된 상태에서 게임을 저장하고 불러왔을 때, 세이브 데이터 내 이름 정보가 유실되지 않고 회상 텍스트에 정상 반영되는지 확인합니다.",
+        preconditions: ["프롤로그 이름 설정이 완료되고 퍼즐 가방 회상 텍스트가 1개 이상 활성화된 상태"],
+        steps: [
+          "현재 시점에서 게임을 수동 또는 자동 저장합니다.",
+          "메인 메뉴로 이동하거나 게임을 종료 후 재시작하여 해당 세이브 파일을 불러옵니다.",
+          "퍼즐 가방 UI에 진입하여 회상 텍스트의 이름을 확인합니다."
+        ],
+        expectedResults: [
+          "세이브 및 로드 이후에도 임시값이 아닌 저장된 실제 이름이 회상 텍스트에 정확하게 유지되어 표시됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "High",
+        category: "저장 및 불러오기",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["플레이어 및 고양이 이름 데이터가 세이브 파일에 정상적으로 직렬화되어 저장됨"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-c35949a5-3a50-4348-a139-53ea9477450f",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "게임 앱 완전 종료 후 재실행 시 회상 텍스트 이름 치환 유지 검증",
+        purpose: "게임 프로세스를 완전히 종료한 뒤 재실행했을 때, PuzzleMemoryManager가 초기화 과정에서 이름 데이터를 올바르게 로드하여 회상 텍스트에 반영하는지 확인합니다.",
+        preconditions: ["이름 설정 및 회상 텍스트 데이터가 포함된 세이브 파일이 존재함"],
+        steps: [
+          "게임 클라이언트를 완전히 종료합니다(ALT+F4 또는 작업 관리자 종료 등).",
+          "게임을 재실행하고 저장된 세이브 데이터를 로드합니다.",
+          "퍼즐 가방 UI를 열어 회상 텍스트를 확인합니다."
+        ],
+        expectedResults: [
+          "앱 재실행 후에도 임시값으로 회귀하지 않고 설정된 이름이 회상 텍스트에 정상적으로 출력됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "Medium",
+        category: "재실행",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["게임 재실행 시 세이브 로드 메커니즘을 통해 이전 플레이 상태가 복원됨"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-f5aae636-9d23-4c8a-83fd-4b45d5996381",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "Windows 데스크톱 환경 및 창 모드/포커스 전환 시 회상 텍스트 치환 검증",
+        purpose: "Windows 운영체제 환경에서 창 모드/전체 화면 전환 또는 창 포커스 상실(Alt+Tab) 및 복귀 상황이 PuzzleMemoryManager의 텍스트 바인딩 및 UI 렌더링에 영향을 주지 않는지 확인합니다.",
+        preconditions: ["퍼즐 가방 UI가 열려 있고 회상 텍스트가 표시된 상태"],
+        steps: [
+          "Alt+Enter를 눌러 창 모드와 전체 화면 모드를 상호 전환합니다.",
+          "Alt+Tab을 이용해 다른 응용프로그램으로 포커스를 잃게 한 뒤 다시 게임 창으로 복귀합니다.",
+          "퍼즐 가방 UI의 회상 텍스트 상태를 확인합니다."
+        ],
+        expectedResults: [
+          "화면 모드 변경 및 포커스 상실·복귀 후에도 회상 텍스트의 이름 치환 상태가 깨지지 않고 정상적으로 유지됩니다."
+        ],
+        relatedIssueIds: ["issue-7f7c30db-964d-434d-8fb3-1af83361c785"],
+        priority: "Low",
+        category: "환경 호환성",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["Windows 창 포커스 변경 및 해상도/모드 전환이 Unity UI 매니저의 데이터 바인딩 타이밍에 직접적인 결함을 유발하지 않음"],
+        source: "external-ai",
+        createdAt: "2026-10-22T01:35:58.018Z",
+        updatedAt: "2026-10-22T01:36:08.283Z"
+      },
+      {
+        id: "tc-66954bf5-5cf2-48cf-ba14-69531640b209",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "설정 메뉴에서 사운드 음소거(Mute) 토글 시 오디오 출력 중단 재현 테스트",
+        purpose: "옵션 또는 설정 UI에서 음소거 체크박스나 버튼을 활성화했을 때, 배경음악(BGM) 및 효과음(SFX) 등 모든 게임 사운드가 즉시 음소거되는지 확인합니다.",
+        preconditions: [
+          "게임이 정상 실행 중이며 BGM 또는 SFX가 출력되고 있는 상태",
+          "설정(Options/Settings) 메뉴에 진입할 수 있는 상태"
+        ],
+        steps: [
+          "설정 메뉴를 엽니다.",
+          "마우스 또는 키보드로 사운드 음소거 옵션을 클릭하여 체크/활성화합니다.",
+          "게임 플레이 화면으로 돌아와 사운드 출력 여부를 청각적으로 확인합니다."
+        ],
+        expectedResults: [
+          "음소거 옵션 활성화 즉시 모든 게임 내 사운드(BGM, SFX 등)가 음소거되어 들리지 않아야 합니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "High",
+        category: "재현 테스트",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: [
+          "게임 내에 사운드 설정을 조작할 수 있는 설정 UI 및 음소거 기능이 존재함",
+          "Unity AudioListener.pause 또는 개별 AudioSource/AudioMixer 음소거 제어 로직을 사용함"
+        ],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-5487e005-8be1-488b-9d17-278de7cb58cd",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "음소거 토글 버튼 빠른 연속 클릭 시 사운드 상태 전환 동기화 검증",
+        purpose: "음소거 버튼을 마우스로 빠르게 연속해서 클릭할 때, 사운드 음소거 및 해제 상태가 오류 없이 올바르게 토글되는지 확인합니다.",
+        preconditions: ["설정 메뉴의 사운드 음소거 옵션 위치에 마우스 커서가 위치한 상태"],
+        steps: [
+          "음소거 버튼을 짧은 간격으로 빠르게 5회 이상 연속 클릭합니다.",
+          "최종적으로 음소거가 설정된 상태 및 해제된 상태에서 각각 사운드 출력 여부를 확인합니다."
+        ],
+        expectedResults: [
+          "빠른 연속 입력에도 입력 유실이나 오디오 매니저 간 상태 불일치가 발생하지 않으며, 최종 설정값에 맞게 사운드가 정확히 제어됩니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "Medium",
+        category: "빠른 연속 입력",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["UI 버튼 이벤트 리스너에 입력 쿨다운이나 중복 방지 로직이 정상 적용되어 있음"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-4400ca30-066e-4abe-9464-0ba69f8c1620",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "볼륨 슬라이더 최솟값(0)과 음소거 기능 간 경계값 동작 검증",
+        purpose: "사운드 볼륨 슬라이더를 최솟값(0)으로 내렸을 때와 음소거 옵션을 체크했을 때의 내부 오디오 믹서 상태가 올바르게 연동되는지 확인합니다.",
+        preconditions: ["볼륨 조절 슬라이더와 음소거 옵션이 함께 존재하는 설정 화면 진입 상태"],
+        steps: [
+          "볼륨 슬라이더를 마우스로 드래그하여 최솟값(0 혹은 -80dB)으로 설정한 뒤 사운드 출력을 확인합니다.",
+          "볼륨이 0이 아닌 상태에서 음소거 체크박스를 활성화하고 오디오 믹서의 출력 변화를 확인합니다."
+        ],
+        expectedResults: [
+          "볼륨 최솟값 설정 및 음소거 설정 시 모두 사운드가 완벽히 차단되며, 음소거 해제 시 이전 볼륨 값으로 정상 복원됩니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "Low",
+        category: "경계값",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["볼륨 슬라이더의 범위는 0(음소거/최소)에서 1(최대) 또는 이와 유사한 정규화된 값을 가짐"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-f170cb8c-04b6-431f-b20d-daaaf7f67181",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "음소거 활성화 상태에서 오디오 트랙 재생 및 상태 전환 검증",
+        purpose: "음소거가 켜진 상태에서 새로운 BGM이 재생되거나 새로운 효과음(SFX)이 발생할 때, 해당 오디오들이 즉시 음소거 상태로 재생되는지 확인합니다.",
+        preconditions: ["사운드 음소거 옵션이 활성화된 상태"],
+        steps: [
+          "음소거가 켜진 채로 스테이지 이동 또는 대화 진행 등을 통해 새로운 BGM이나 SFX가 트리거되는 상황을 만듭니다.",
+          "음소거 상태를 해제하여 직전 재생된 사운드가 백그라운드에서 정상 재생 중이었는지 확인합니다."
+        ],
+        expectedResults: [
+          "음소거 중 새로 재생되는 오디오 소스들도 소리가 출력되지 않아야 하며, 음소거 해제 시 현재 시점에 맞는 사운드가 정상 들려야 합니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "Medium",
+        category: "상태 전환",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["AudioMixer의 Expose된 파라미터 또는 AudioListener를 통해 전역 음소거가 제어됨"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-c629481d-abe1-4477-8330-d865e64bbded",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "음소거 설정 변경 후 게임 저장 및 불러오기 시 설정 유지 검증",
+        purpose: "사운드 음소거 상태를 변경한 후 게임 데이터를 저장하고 다시 불러왔을 때, 음소거 설정 값이 세이브 파일에 올바르게 반영 및 유지되는지 확인합니다.",
+        preconditions: ["게임 내 수동 또는 자동 저장 기능 사용 가능 상태"],
+        steps: [
+          "설정 메뉴에서 사운드 음소거를 활성화한 상태로 게임을 저장합니다.",
+          "메인 메뉴로 나가거나 게임을 재시작한 뒤 해당 세이브 파일을 불러옵니다.",
+          "설정 메뉴 및 인게임 사운드 출력 상태를 확인합니다."
+        ],
+        expectedResults: [
+          "세이브 파일 로드 후에도 음소거 설정(Mute) 상태가 그대로 유지되며 사운드가 들리지 않아야 합니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "High",
+        category: "저장 및 불러오기",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["오디오 설정(음소거 및 볼륨)이 플레이어 개인 세이브 데이터 또는 별도의 환경 설정 파일(PlayerPrefs 등)에 저장됨"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-5f41841a-aa0d-4990-93b3-7c6786681f7e",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "게임 앱 완전 종료 후 재실행 시 오디오 음소거 상태 유지 검증",
+        purpose: "사운드를 음소거한 상태로 게임 클라이언트를 완전히 종료했다가 재실행했을 때, 초기화 과정에서 음소거 설정이 올바르게 적용되는지 확인합니다.",
+        preconditions: ["사운드가 음소거된 상태"],
+        steps: [
+          "Alt+F4 등을 통해 게임 앱을 완전히 종료합니다.",
+          "게임을 다시 실행하여 타이틀 화면 및 인게임 진입 시의 사운드 출력 상태를 확인합니다."
+        ],
+        expectedResults: [
+          "앱 재실행 시에도 이전 설정된 음소거 상태가 유지되어 타이틀 화면부터 소리가 나지 않아야 합니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "Medium",
+        category: "재실행",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["설정 파일이 로컬 디스크(PlayerPrefs 또는 JSON 파일 등)에 정상적으로 기록됨"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      },
+      {
+        id: "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "Windows 창 포커스 상실(백그라운드 전환) 및 전체 화면 모드 변경 시 사운드 제어 검증",
+        purpose: "Windows 환경에서 Alt+Tab으로 게임 창이 포커스를 잃거나 창 모드/전체 화면(Alt+Enter)을 전환할 때, 오디오 음소거 기능 및 시스템 오디오 처리(백그라운드 음소거 옵션 등)에 이상이 없는지 확인합니다.",
+        preconditions: ["게임이 Windows 데스크톱 환경에서 실행 중인 상태"],
+        steps: [
+          "Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.",
+          "다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다."
+        ],
+        expectedResults: [
+          "포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다."
+        ],
+        relatedIssueIds: ["issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"],
+        priority: "Low",
+        category: "환경 호환성",
+        platform: "Windows",
+        status: "Draft",
+        assumptions: ["Unity Run In Background 설정이 활성화되어 있으며, Windows 오디오 렌더링에 별도의 하드웨어 결함이 없음"],
+        source: "external-ai",
+        createdAt: "2026-10-22T04:07:08.748Z",
+        updatedAt: "2026-10-22T04:07:18.458Z"
+      }
+    ],
+    testRuns: [
+      {
+        id: "run-3d582d2a-f898-4415-8d5a-b6b5fdac1cdf",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
+        testCaseTitle: "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
+        result: "PASS",
+        executedAt: "2026-10-21T16:36:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "스테이지2에서 퍼즐 가방 UI 창 열었을 시, 플레이어 이름 정상적으로 치환되는 현상 확인 가능.",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T01:37:10.479Z"
+      },
+      {
+        id: "run-b46c65ea-d3cd-4846-b965-7b2b6db463cb",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
+        testCaseTitle: "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
+        result: "BLOCKED",
+        executedAt: "2026-10-21T23:52:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "테스트",
+        notes: "게임 종료 후 로드 했더니 먹히지 않았음",
+        nextNotes: "",
+        createdAt: "2026-10-22T01:49:14.946Z"
+      },
+      {
+        id: "run-7b2d81d5-e84e-4286-b865-575f93f210eb",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
+        testCaseTitle: "점프 키 빠른 연속 입력 테스트",
+        result: "FAIL",
+        executedAt: "2026-10-22T01:52:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
+        notes: "점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.",
+        nextNotes: "",
+        createdAt: "2026-10-22T01:51:16.808Z"
+      },
+      {
+        id: "run-8fc39230-3d91-4d2d-ae34-9fbf2cc0078f",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-5e6e67e3-5996-4437-95e1-b86a32073c5b",
+        testCaseTitle: "플레이어 점프 시 바닥 통과 재현 테스트",
+        result: "PASS",
+        executedAt: "2026-10-21T18:51:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "플레이어 점프 후 바닥에 무사히 착지함",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:51:50.614Z"
+      },
+      {
+        id: "run-a3b39cb3-d39c-4f01-8d80-a4a3c6d06a5d",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-d80438f3-9e48-4f6f-bd32-39d59e65c332",
+        testCaseTitle: "프롤로그 이름 변경 및 퍼즐 가방 UI 빠른 연속 진입 시 이름 치환 타이밍 검증",
+        result: "PASS",
+        executedAt: "2026-10-21T18:52:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "연속 여닫기 후에도 입력한 이름이 회상 텍스트에 정상 유지됨",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:52:33.006Z"
+      },
+      {
+        id: "run-a50b5cd4-7fa0-4da4-9733-e2ee572bb492",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-93c67452-b17d-4911-9501-c7063d01a378",
+        testCaseTitle: "이름 글자 수 경계값(최소/최대) 입력 시 회상 텍스트 치환 검증",
+        result: "BLOCKED",
+        executedAt: "2026-10-21T18:52:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "최대 글자 수 제한 정책 확인 전 테스트 보류",
+        notes: "이름 입력 UI의 최대 글자 수 제한 사양서 확인 필요",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:52:50.111Z"
+      },
+      {
+        id: "run-48d496e9-c287-414f-86d5-2ed88cac3dde",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-31e22cdd-96ed-4f97-940d-1c02ade818db",
+        testCaseTitle: "게임 진행 중 이름 변경 이벤트 발생 시 회상 텍스트 실시간 반영 상태 전환 검증",
+        result: "PASS",
+        executedAt: "2026-10-21T18:52:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "게임 진행 중에는 이름 변경을 하지 못하도록 하여 해당 테스트 케이스는 통과됨",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:53:29.240Z"
+      },
+      {
+        id: "run-a46f1f80-6c16-4def-be2a-9643223ecfb1",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-9eb9aeaf-e7f4-4bb8-b3f6-60d63c2c8af5",
+        testCaseTitle: "이름 설정 및 회상 텍스트 활성화 후 세이브/로드 시 이름 유지 검증",
+        result: "PASS",
+        executedAt: "2026-10-21T18:53:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "유지됨",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:53:53.993Z"
+      },
+      {
+        id: "run-f4ca5856-047a-4471-acbc-dbcfc42fbde1",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-c35949a5-3a50-4348-a139-53ea9477450f",
+        testCaseTitle: "게임 앱 완전 종료 후 재실행 시 회상 텍스트 이름 치환 유지 검증",
+        result: "PASS",
+        executedAt: "2026-10-21T18:54:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "잘 유지됨",
+        notes: "",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:54:08.554Z"
+      },
+      {
+        id: "run-f21eb6ef-44ad-494c-b829-53e2d617d52d",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-f5aae636-9d23-4c8a-83fd-4b45d5996381",
+        testCaseTitle: "Windows 데스크톱 환경 및 창 모드/포커스 전환 시 회상 텍스트 치환 검증",
+        result: "BLOCKED",
+        executedAt: "2026-10-21T18:54:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "창 모드 전환 단축키 미지원으로 테스트 보류",
+        notes: "현재 빌드에서 Alt+Enter 전환 옵션 비활성화 상태",
+        nextNotes: "",
+        createdAt: "2026-10-22T03:54:28.538Z"
+      },
+      {
+        id: "run-df97f5d6-1ab7-46ff-bcd2-fd23e6a90fff",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        testCaseId: "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
+        testCaseTitle: "Windows 창 포커스 상실(백그라운드 전환) 및 전체 화면 모드 변경 시 사운드 제어 검증",
+        result: "FAIL",
+        executedAt: "2026-10-21T19:07:00.000Z",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        windowsEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        actualResult: "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
+        notes: "백그라운드 전환 시 BGM은 멈추나 SFX 채널은 계속 출력됨",
+        nextNotes: "",
+        createdAt: "2026-10-22T04:08:36.099Z"
+      }
+    ],
+    bugReports: [
+      {
+        id: "bug-fb7cbdfb-804f-4770-9048-fc86020139f1",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "[BUG] 연속 점프 입력 불가능",
+        status: "Draft",
+        severity: "Major",
+        priority: "Medium",
+        relatedIssueId: "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247",
+        testCaseId: "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
+        testRunId: "run-7b2d81d5-e84e-4286-b865-575f93f210eb",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        platform: "Windows",
+        runtimeEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        frequency: "5회 중 3회",
+        preconditions: "Windows 데스크톱 빌드를 실행한다.\n플레이어가 바닥 위에 있는지 확인한다.",
+        reproductionSteps: "1. 점프 입력을 빠르게 여러 번 반복한다.\n2. 플레이어의 위치와 바닥 충돌 상태를 관찰한다.\n3. 입력 종료 후 정상적으로 조작할 수 있는지 확인한다.",
+        expectedResult: "입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.\n입력 종료 후 게임이 정상적으로 반응한다.",
+        actualResult: "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
+        confirmedFacts: "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
+        suspectedCause: "점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.",
+        evidenceNotes: "bool isDoubleJump = true; 이후 \nisDoubleJump = false; 로 초기화의 코드가 없음.",
+        createdAt: "2026-10-22T02:30:33.226Z",
+        updatedAt: "2026-10-22T02:31:51.314Z"
+      },
+      {
+        id: "bug-d5608949-cb2d-42c3-ac60-3669ea84473e",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        title: "[BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능",
+        status: "Draft",
+        severity: "Minor",
+        priority: "Low",
+        relatedIssueId: "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd",
+        testCaseId: "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
+        testRunId: "run-df97f5d6-1ab7-46ff-bcd2-fd23e6a90fff",
+        gameVersion: "1.0.1",
+        buildVersion: "Windows-2026.10.21",
+        platform: "Desktop",
+        runtimeEnvironment: "Windows 11",
+        resolution: "1920 × 1080",
+        frequency: "항상 재현",
+        preconditions: "게임이 Windows 데스크톱 환경에서 실행 중인 상태",
+        reproductionSteps: "1. Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.\n2. 다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다.",
+        expectedResult: "포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다.",
+        actualResult: "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
+        confirmedFacts: "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
+        suspectedCause: "원인 미확인",
+        evidenceNotes: "백그라운드 전환 시 SFX 오디오 채널 일시정지 누락 확인 필요",
+        createdAt: "2026-10-22T04:09:45.626Z",
+        updatedAt: "2026-10-22T04:09:45.626Z"
+      }
+    ],
+    mailDrafts: [
+      {
+        id: "mail-draft-53f774b9-7b1a-4877-9092-04cbb3c7a27d",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        bugReportId: "bug-fb7cbdfb-804f-4770-9048-fc86020139f1",
+        recipient: "qa-dev@example.com",
+        subject: "[수정 요청] [BUG] 연속 점프 입력 불가능",
+        body: "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 연속 점프 입력 불가능\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: Windows · 실행 환경: Windows 11 · 해상도: 1920 × 1080\n발생 빈도: 5회 중 3회\n\n재현 절차:\n1. 점프 입력을 빠르게 여러 번 반복한다.\n2. 플레이어의 위치와 바닥 충돌 상태를 관찰한다.\n3. 입력 종료 후 정상적으로 조작할 수 있는지 확인한다.\n\n기대 결과: 입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.\n입력 종료 후 게임이 정상적으로 반응한다.\n실제 결과: 점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음\n심각도: Major · 우선순위: Medium\n관련 테스트 케이스: tc-4515929c-16c7-4b8f-aa33-6496726d35cb · 관련 이슈: issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247\n첨부 증거 또는 추가 확인 사항: bool isDoubleJump = true; 이후 \nisDoubleJump = false; 로 초기화의 코드가 없음.\n확인된 사실: 점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음\n원인: 추정(미검증) — 점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+        updatedAt: "2026-10-22T02:57:42.864Z"
+      },
+      {
+        id: "mail-draft-91bc2186-0255-459c-969a-76c8348a4db5",
+        projectId: "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+        bugReportId: "bug-d5608949-cb2d-42c3-ac60-3669ea84473e",
+        recipient: "qa-dev@example.com",
+        subject: "[수정 요청] [BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능",
+        body: "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: Desktop · 실행 환경: Windows 11 · 해상도: 1920 × 1080\n발생 빈도: 항상 재현\n\n재현 절차:\n1. Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.\n2. 다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다.\n\n기대 결과: 포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다.\n실제 결과: 일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨\n심각도: Minor · 우선순위: Low\n관련 테스트 케이스: tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce · 관련 이슈: issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd\n첨부 증거 또는 추가 확인 사항: 백그라운드 전환 시 SFX 오디오 채널 일시정지 누락 확인 필요\n확인된 사실: 일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨\n원인: 원인 미확인\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+        updatedAt: "2026-10-22T04:09:57.283Z"
+      }
+    ]
+  };
+
+  function populateDemoMarkdownPreview() {
+    fullRawViewer.textContent = DEMO_ISSUES_MD;
+    selectedFileName.textContent = 'test/Issues.md (내장 데모 샘플)';
+    selectedFileSize.textContent = formatBytes(new Blob([DEMO_ISSUES_MD]).size);
+    fileInfoBar.style.display = 'flex';
+    currentParseSummary = { preambleText: '', hasPreamble: false };
+  }
+
+  function refreshAllViews() {
+    renderProjectSelector();
+    fillProjectForm(activeProject());
+    renderIssues();
+    renderTestCases();
+    renderExecutionView();
+    renderBugReportList();
+    renderMailReportOptions();
+    updateExportIssueOptions();
+    const firstIssue = projectIssues()[0];
+    if (firstIssue && $('tc-prompt-issue')) {
+      $('tc-prompt-issue').value = firstIssue.id;
+      $('tc-prompt-text').value = buildPrompt(firstIssue);
+      $('tc-prompt-status').textContent = `데모 이슈(#${firstIssue.number || 1} ${firstIssue.title}) 기준 프롬프트가 준비되어 있습니다.`;
+    }
+    const firstBug = (db.bugReports || []).find(r => r.projectId === activeProjectId);
+    if (firstBug) {
+      loadBugReport(firstBug);
+    } else {
+      loadBugReport(null);
+    }
+  }
+
+  function applyDemoDatabase(showAlert = false) {
+    const cloned = JSON.parse(JSON.stringify(DEMO_BACKUP_DATA));
+    db = {
+      schemaVersion: SCHEMA_VERSION,
+      projects: cloned.projects,
+      issues: cloned.issues,
+      testCases: cloned.testCases,
+      testRuns: cloned.testRuns,
+      bugReports: cloned.bugReports,
+      mailDrafts: cloned.mailDrafts,
+      updatedAt: new Date().toISOString()
+    };
+    storageWritable = true;
+    activeProjectId = db.projects[0]?.id || null;
+    selectedIssueId = db.issues[0]?.id || null;
+    try {
+      localStorage.removeItem(EMPTY_MODE_KEY);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    } catch (_) {}
+    populateDemoMarkdownPreview();
+    hideError();
+    setStorageStatus('데모 데이터(Four Footsteps) 적용됨');
+    if ($('header-mode-label')) $('header-mode-label').textContent = '데모 데이터 적용됨 (로컬 저장)';
+    refreshAllViews();
+    if (showAlert) {
+      alert('내장된 데모 데이터(Four Footsteps 프로젝트, 이슈 3건, 테스트 케이스 15건, 실행 기록 11건, 버그 리포트 2건, 메일 초안 2건)를 불러왔습니다.');
+    }
+  }
+
+  function clearToEmptyDatabase() {
+    if (!confirm('모든 데이터를 비우고 빈 프로젝트 상태로 초기화할까요?\n(언제든 상단의 [🎮 데모 데이터 복원] 버튼으로 데모 데이터를 다시 불러올 수 있습니다.)')) return;
+    db = createEmptyDatabase();
+    storageWritable = true;
+    activeProjectId = null;
+    selectedIssueId = null;
+    fileInput.value = '';
+    fileInfoBar.style.display = 'none';
+    fullRawViewer.textContent = '';
+    currentParseSummary = { preambleText: '', hasPreamble: false };
+    previewTestCases = [];
+    renderPreviewCards();
+    $('tc-ai-json').value = '';
+    $('tc-prompt-text').value = '';
+    $('tc-prompt-status').textContent = '';
+    $('run-detail-card').style.display = 'none';
+    try {
+      localStorage.setItem(EMPTY_MODE_KEY, '1');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    } catch (_) {}
+    hideError();
+    setStorageStatus('빈 프로젝트 상태');
+    if ($('header-mode-label')) $('header-mode-label').textContent = '로컬 파일 모드 (빈 상태)';
+    refreshAllViews();
+  }
+
+  ['btn-load-demo', 'btn-dash-load-demo', 'btn-restore-demo-backup'].forEach(id => {
+    const btn = $(id);
+    if (btn) btn.addEventListener('click', () => applyDemoDatabase(true));
+  });
+  ['btn-clear-all-data', 'btn-dash-clear-demo'].forEach(id => {
+    const btn = $(id);
+    if (btn) btn.addEventListener('click', clearToEmptyDatabase);
+  });
+
+  if ($('btn-load-sample-md')) {
+    $('btn-load-sample-md').addEventListener('click', () => {
+      hideError();
+      if (!activeProject()) {
+        const defaultProj = JSON.parse(JSON.stringify(DEMO_BACKUP_DATA.projects[0]));
+        db.projects.push(defaultProj);
+        activeProjectId = defaultProj.id;
+        renderProjectSelector();
+        fillProjectForm(defaultProj);
+      }
+      const parsed = parseMarkdownIssues(DEMO_ISSUES_MD);
+      populateDemoMarkdownPreview();
+      const incoming = parsed.issues.map((issue, index) => ({
+        id: makeId('issue'),
+        projectId: activeProjectId,
+        number: issue.explicitNumber || String(index + 1),
+        title: issue.title,
+        status: normalizeStatus(issue.explicitStatus),
+        description: issue.body,
+        rawMarkdown: issue.rawBlock,
+        source: 'markdown',
+        modified: false,
+        sourceFile: 'Issues.md',
+        lineStart: issue.lineStart,
+        warnings: issue.warnings,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }));
+      const existing = projectIssues();
+      const newItems = incoming.filter(candidate => !existing.some(old => isDuplicate(old, candidate)));
+      if (newItems.length > 0) {
+        db.issues.push(...newItems);
+        saveDatabase();
+      }
+      updateParsedSummary(parsed.issues.length, parsed.hasPreamble, parsed.issues.reduce((n, issue) => n + issue.warnings.length, 0));
+      renderIssues();
+      switchTab('parsed-view');
+      alert(newItems.length > 0
+        ? `내장된 샘플 Issues.md에서 이슈 ${newItems.length}건을 파싱하여 추가했습니다.`
+        : '내장된 샘플 Issues.md 원문과 파싱 결과를 불러왔습니다. [📋 파싱된 이슈 목록]과 [📄 파일 원문 (Markdown)] 탭에서 비교해 보세요.');
+    });
+  }
+
+  if ($('btn-load-sample-ai-json')) {
+    $('btn-load-sample-ai-json').addEventListener('click', () => {
+      if (!activeProject()) {
+        applyDemoDatabase(false);
+      }
+      $('tc-ai-json').value = JSON.stringify(DEMO_AI_TESTCASES_JSON, null, 2);
+      $('btn-parse-ai-json').click();
+      $('tc-preview-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // 초기 화면 로드: 저장된 데이터가 없거나 비어 있으면(초기화 모드가 아닐 때) 데모 데이터를 자동 적용합니다.
+  loadDatabase();
+  let isEmptyMode = false;
+  try { isEmptyMode = localStorage.getItem(EMPTY_MODE_KEY) === '1'; } catch (_) {}
+  if ((!db.projects || db.projects.length === 0) && !isEmptyMode) {
+    applyDemoDatabase(false);
+  } else {
+    if (db.projects && db.projects.length > 0 && !fullRawViewer.textContent) {
+      populateDemoMarkdownPreview();
+    }
+    refreshAllViews();
+  }
+  $('run-date').value = new Date().toISOString().slice(0,16);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initUnityQaCompanion);
+} else {
+  initUnityQaCompanion();
+}
 </script>
 </body>
 </html>

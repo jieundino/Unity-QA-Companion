@@ -153,12 +153,68 @@ body {
   font-weight: 700;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
 .header-status {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.demo-banner-card {
+  background: linear-gradient(135deg, #FFF7F3 0%, #FFFFFF 100%);
+  border: 1px solid #FFD6C7;
+}
+
+.demo-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.demo-banner-text {
+  flex: 1;
+  min-width: 280px;
+}
+
+.demo-banner-text h3 {
+  font-size: 15px;
+  color: var(--primary-orange-hover);
+  margin-bottom: 6px;
+}
+
+.demo-banner-text p {
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.demo-banner-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.file-input-wrapper {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .status-indicator {

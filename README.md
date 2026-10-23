@@ -6,6 +6,11 @@ Unity 게임 개발 과정에서 발생한 이슈를 바탕으로 테스트 케�
 
 기존 `Issues.md` 파일을 활용해 이슈 관리부터 테스트 케이스 작성, 테스트 실행 결과 기록, 버그 리포트 작성까지 이어지는 QA 워크플로를 하나의 도구에서 관리하는 것을 목표로 합니다.
 
+> ### 🚀 바로 실행해 보기 (데모 데이터 기본 탑재)
+> - **웹 브라우저에서 바로 열기 (Live Preview):** [**UnityQACompanion-standalone.html 바로가기**](https://htmlpreview.github.io/?https://github.com/jieundino/Unity-QA-Companion-practice/blob/main/UnityQACompanion-standalone.html)
+> - **저장소 내 단독 실행 파일:** [`UnityQACompanion-standalone.html`](./UnityQACompanion-standalone.html)
+> - 별도의 JSON 백업 파일을 다운로드·로드하지 않아도 `test/` 폴더의 샘플 프로젝트(**Four Footsteps**) 데이터가 기본 탑재되어 있어 열자마자 전체 기능을 바로 테스트해 볼 수 있습니다.
+
 ## 프로젝트 소개
 
 Unity 게임 개발 과정에서 기록한 이슈는 문제를 추적하는 데 유용하지만, 이를 체계적인 테스트 케이스로 전환하고 실제 빌드에서 검증한 결과까지 관리하려면 별도의 작업이 필요합니다.
@@ -87,7 +92,8 @@ AI API를 직접 연동하는 대신, 사용자가 외부 AI 도구를 활용하
 ## 사용 방법
 
 ### 1. 프로젝트 실행
-프로젝트 파일을 내려받거나 Git으로 복제한 뒤, 프로젝트에 포함된 시작 HTML 파일을 브라우저에서 실행합니다.
+프로젝트 파일을 내려받거나 Git으로 복제한 뒤, 프로젝트에 포함된 시작 HTML 파일(`index.html` 또는 단독 실행 파일인 [`UnityQACompanion-standalone.html`](./UnityQACompanion-standalone.html))을 브라우저에서 실행합니다.
+- 다운로드 없이 바로 확인하려면 [**UnityQACompanion-standalone.html 웹 미리보기**](https://htmlpreview.github.io/?https://github.com/jieundino/Unity-QA-Companion-practice/blob/main/UnityQACompanion-standalone.html) 링크로 즉시 접속할 수 있습니다.
 
 ### 2. 프로젝트 생성 및 이슈 가져오기
 프로젝트 정보를 등록하고 기존 `Issues.md` 파일을 업로드합니다. 파싱된 이슈 목록과 원문을 비교해 결과를 검수합니다.
