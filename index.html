@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unity QA Companion</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- 1. 왼쪽 사이드바 -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">🎮</span>
+        <div class="brand-text">
+          <h2>Unity QA</h2>
+          <span class="sub-text">Companion</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="icon">📊</span> 대시보드
+        </button>
+        <button class="nav-item" data-view="issues">
+          <span class="icon">📋</span> 프로젝트 & 기존 이슈
+        </button>
+        <button class="nav-item" data-view="testcases">
+          <span class="icon">🧪</span> 테스트 케이스
+        </button>
+        <button class="nav-item" data-view="execution">
+          <span class="icon">▶️</span> 테스트 실행 결과
+        </button>
+        <button class="nav-item" data-view="reports">
+          <span class="icon">✉️</span> 오류 보고서 & 메일
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="platform-badge">Target: Windows</span>
+        <span class="version-badge">브라우저 로컬 저장</span>
+      </div>
+    </aside>
+
+    <!-- 2. 메인 콘텐츠 영역 -->
+    <main class="content-area">
+      <header class="content-header">
+        <h1 id="current-view-title">대시보드</h1>
+        <div class="header-status">
+          <span class="status-indicator"></span> 로컬 파일 모드
+        </div>
+      </header>
+
+      <div class="view-container">
+        <!-- 화면 1: 대시보드 -->
+        <section id="view-dashboard" class="view-section active">
+          <div class="metrics-grid">
+            <div class="card metric-card">
+              <h3>총 이슈</h3>
+              <p class="metric-value" id="dash-total-issues">0</p>
+              <span class="metric-desc">이슈 파일 파싱 시 반영</span>
+            </div>
+            <div class="card metric-card">
+              <h3>생성된 TC</h3>
+              <p class="metric-value" id="dash-total-testcases">0</p>
+              <span class="metric-desc">테스트 케이스 관리</span>
+            </div>
+            <div class="card metric-card">
+              <h3>통과율 (Pass Rate)</h3>
+              <p class="metric-value" id="dash-pass-rate">—%</p>
+              <span class="metric-desc" id="dash-pass-desc">실행 기록 없음</span>
+            </div>
+            <div class="card metric-card">
+              <h3>미해결 결함</h3>
+              <p class="metric-value" id="dash-unresolved-bugs">0</p>
+              <span class="metric-desc" id="dash-unresolved-bugs-desc">전체 프로젝트 기준</span>
+            </div>
+          </div>
+
+          <div class="card info-card">
+            <h3>프로젝트 빠른 시작 가이드</h3>
+            <p><strong>Unity QA Companion</strong>은 Unity 게임의 Windows 빌드 QA 업무를 체계화하기 위한 도구입니다.</p>
+            <ol>
+              <li><strong>프로젝트 & 기존 이슈</strong> 탭에서 기존 <code>Issues.md</code> 파일을 선택하여 이슈 목록을 파싱합니다.</li>
+              <li>파싱 결과와 원문을 비교 검토하고, 누락되거나 미분류된 내용이 없는지 확인합니다.</li>
+              <li>테스트 케이스 탭에서 이슈 기반 프롬프트를 만들고 외부 AI 결과를 검수해 테스트 케이스로 등록합니다.</li>
+            </ol>
+            <div class="notice-box">
+              💡 외부 서버나 AI API를 호출하지 않습니다. 프로젝트, 이슈, 테스트 케이스는 이 브라우저의 localStorage에 저장됩니다.
+            </div>
+          </div>
+        </section>
+
+        <!-- 화면 2: 프로젝트 및 기존 이슈 -->
+        <section id="view-issues" class="view-section">
+          <!-- 프로젝트 정보 관리 -->
+          <div class="card">
+            <div class="card-header">
+              <h2>프로젝트 정보</h2>
+              <div class="project-actions">
+                <select id="project-selector" aria-label="프로젝트 선택"></select>
+                <button class="btn btn-secondary" id="btn-new-project" type="button">+ 새 프로젝트</button>
+              </div>
+            </div>
+            <p class="card-subtitle">프로젝트와 연결된 이슈는 이 브라우저의 localStorage에 저장됩니다.</p>
+            <form id="project-form" class="data-form">
+              <div class="form-grid">
+                <label>프로젝트 ID<input id="project-id" name="projectId" readonly></label>
+                <label>프로젝트 이름<input id="project-name" name="name" required maxlength="120" placeholder="예: Four Footsteps"></label>
+                <label>게임 버전<input id="project-game-version" name="gameVersion" maxlength="60" placeholder="예: 1.0.0"></label>
+                <label>빌드 버전<input id="project-build-version" name="buildVersion" maxlength="60" placeholder="예: Windows-2026.10.21"></label>
+                <label>생성일<input id="project-created-at" name="createdAt" type="date" readonly></label>
+                <label class="wide-field">설명<textarea id="project-description" name="description" rows="2" maxlength="1000" placeholder="프로젝트 설명"></textarea></label>
+              </div>
+              <div class="form-actions"><button class="btn btn-primary" type="submit">프로젝트 저장</button><span id="storage-status" class="inline-status" role="status">저장 상태 확인 중</span></div>
+            </form>
+          </div>
+
+          <!-- 파일 업로드 카드 -->
+          <div class="card">
+            <div class="card-header">
+              <h2>이슈 마크다운 파일(Issues.md) 불러오기</h2>
+              <div class="file-input-wrapper">
+                <input type="file" id="md-file-input" accept=".md,text/markdown,text/plain" style="display: none;">
+                <button class="btn btn-primary" id="btn-select-file">📂 .md 파일 선택</button>
+              </div>
+            </div>
+            <p class="card-subtitle">기존 프로젝트의 QA 이슈 목록 파일(.md)을 선택하면 브라우저에서 구조를 분석합니다.</p>
+            
+            <div id="file-info-bar" class="file-info-bar" style="display: none;">
+              <span class="file-name" id="selected-file-name">-</span>
+              <span class="file-size" id="selected-file-size">-</span>
+              <button class="btn-text" id="btn-clear-file">✕ 초기화</button>
+            </div>
+
+            <!-- 에러 알림 박스 -->
+            <div id="error-alert-box" class="alert-box error" style="display: none;"></div>
+          </div>
+
+          <!-- 파싱 전 빈 상태 표시 -->
+          <div id="issues-empty-state" class="empty-state">
+            <span class="empty-icon">📄</span>
+            <h3>선택된 이슈 파일이 없습니다.</h3>
+            <p>상단의 <strong>[.md 파일 선택]</strong> 버튼을 눌러 테스트할 <code>Issues.md</code> 파일을 불러와 주세요.</p>
+          </div>
+
+          <div class="card issue-toolbar-card">
+            <div class="card-header"><h3>프로젝트 이슈</h3><button class="btn btn-primary" id="btn-add-issue" type="button">+ 이슈 수동 추가</button></div>
+            <p class="card-subtitle">Markdown에서 가져온 이슈도 저장 후 직접 수정할 수 있습니다. 수정된 이슈는 출처와 수정 여부가 표시됩니다.</p>
+          </div>
+
+          <!-- 파싱 완료 후 결과 표시 영역 -->
+          <div id="issues-result-container" style="display: none;">
+            <!-- 파싱 요약 수치 -->
+            <div class="summary-chips">
+              <div class="chip chip-success">파싱 완료 이슈: <strong id="count-parsed">0</strong>건</div>
+              <div class="chip chip-warning">미분류 / 헤더 외 내용: <strong id="count-unclassified">0</strong>건</div>
+              <div class="chip chip-alert" id="chip-warnings" style="display: none;">확인 권장 사항: <strong id="count-warnings">0</strong>건</div>
+            </div>
+
+            <!-- 보기 모드 탭 (목록 보기 vs 원문 비교) -->
+            <div class="tab-switch">
+              <button class="tab-btn active" data-tab="parsed-view">📋 파싱된 이슈 목록</button>
+              <button class="tab-btn" data-tab="raw-view">📄 파일 원문 (Markdown)</button>
+            </div>
+
+            <!-- 탭 1: 파싱된 이슈 목록 & 상세 보기 (2단 화면) -->
+            <div id="tab-parsed-view" class="tab-content active">
+              <div class="issues-split-layout">
+                <!-- 좌측: 이슈 목록 테이블 -->
+                <div class="issue-list-pane">
+                  <div class="table-wrapper">
+                    <table class="issue-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 70px;">번호</th>
+                          <th style="width: 80px;">상태</th>
+                          <th>이슈 제목</th>
+                          <th style="width: 60px;">비고</th>
+                        </tr>
+                      </thead>
+                      <tbody id="issue-table-body">
+                        <!-- 동적으로 주입됩니다 -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- 미분류 섹션 -->
+                  <div id="unclassified-container" class="card unclassified-card" style="display: none;">
+                    <h3>⚠️ 미분류 내용 (Preamble / 비구조화 텍스트)</h3>
+                    <p class="card-subtitle">이슈 제목(Heading)으로 식별되지 않은 파일 도입부나 메모입니다. 버려지지 않고 보존됩니다.</p>
+                    <pre id="unclassified-text"></pre>
+                  </div>
+                </div>
+
+                <!-- 우측: 선택된 이슈 상세 보기 -->
+                <div class="issue-detail-pane card">
+                  <div id="detail-empty" class="detail-empty">
+                    <p>👈 왼쪽 목록에서 이슈를 선택하면<br>상세 내용과 원본 블록을 확인할 수 있습니다.</p>
+                  </div>
+                  <div id="detail-content" style="display: none;">
+                    <div class="detail-header">
+                      <span class="badge" id="detail-badge-status">미지정</span>
+                      <span class="detail-number" id="detail-number">#</span>
+                    </div>
+                    <div class="source-label" id="detail-source-label">출처: Markdown 원문</div>
+                    <form id="issue-form" class="data-form compact-form">
+                      <label>이슈 제목<input id="edit-issue-title" required maxlength="240"></label>
+                      <label>상태<select id="edit-issue-status"><option value="Open">Open</option><option value="In Progress">In Progress</option><option value="Closed">Closed</option><option value="Resolved">Resolved</option><option value="보류">보류</option><option value="미지정">미지정</option></select></label>
+                      <label>설명 / 본문<textarea id="edit-issue-description" rows="7" maxlength="10000" placeholder="재현 경로, 기대 결과, 실제 결과 등"></textarea></label>
+                      <div class="form-actions wrap-actions">
+                        <button class="btn btn-primary" type="submit">변경 사항 저장</button>
+                        <button class="btn btn-secondary" id="btn-reset-issue-edit" type="button">수정 취소</button>
+                        <button class="btn btn-danger" id="btn-delete-issue" type="button">이슈 삭제</button>
+                      </div>
+                    </form>
+                    <div id="detail-warning-box" class="alert-box warning" style="display: none;"></div>
+                    <div class="detail-section">
+                      <h4>원문 마크다운 블록</h4>
+                      <pre class="code-preview" id="detail-raw"></pre>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 탭 2: 원문 비교 탭 -->
+            <div id="tab-raw-view" class="tab-content">
+              <div class="card">
+                <div class="card-header">
+                  <h3>전체 파일 원문 텍스트</h3>
+                  <button class="btn btn-secondary" id="btn-copy-raw">원문 복사</button>
+                </div>
+                <pre class="raw-markdown-viewer" id="full-raw-viewer"></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 화면 3: 테스트 케이스 관리 및 외부 AI 결과 등록 -->
+        <section id="view-testcases" class="view-section">
+          <div class="card">
+            <div class="card-header">
+              <div><h2>테스트 케이스 관리</h2><p class="card-subtitle">외부 AI를 직접 호출하지 않습니다. 프롬프트를 복사해 사용하고 결과를 붙여넣어 검수합니다.</p></div>
+              <button class="btn btn-primary" id="btn-new-testcase" type="button">+ 수동 테스트 케이스</button>
+            </div>
+            <div class="tc-filters">
+              <label>제목 검색<input id="tc-filter-title" placeholder="테스트 제목 검색"></label>
+              <label>관련 이슈<select id="tc-filter-issue"><option value="">모든 이슈</option></select></label>
+              <label>우선순위<select id="tc-filter-priority"><option value="">전체</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+              <label>작성 상태<select id="tc-filter-status"><option value="">전체</option><option>Draft</option><option>Ready</option><option>Archived</option></select></label>
+            </div>
+            <div class="table-wrapper">
+              <table class="issue-table tc-table"><thead><tr><th>ID</th><th>테스트 제목</th><th>관련 이슈</th><th>우선순위</th><th>분류</th><th>플랫폼</th><th>작성 상태</th><th>작업</th></tr></thead><tbody id="tc-table-body"></tbody></table>
+            </div>
+            <p id="tc-empty-state" class="tc-empty">현재 프로젝트에 등록된 테스트 케이스가 없습니다. 수동으로 추가하거나 외부 AI 결과를 등록해 주세요.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h2>AI 프롬프트 생성</h2></div>
+            <p class="card-subtitle">이슈를 선택하면 Windows 데스크톱 빌드 기준 QA 프롬프트가 만들어집니다. 생성 후 직접 수정할 수 있습니다.</p>
+            <div class="tc-prompt-controls"><label>기준 이슈<select id="tc-prompt-issue"><option value="">이슈 선택</option></select></label><button class="btn btn-secondary" id="btn-generate-prompt" type="button">프롬프트 생성</button><button class="btn btn-primary" id="btn-copy-prompt" type="button">프롬프트 복사</button></div>
+            <textarea id="tc-prompt-text" class="tc-large-textarea" rows="16" placeholder="이슈를 선택하고 [프롬프트 생성]을 눌러 주세요."></textarea>
+            <p id="tc-prompt-status" class="inline-status" role="status"></p>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h2>외부 AI 결과 붙여넣기</h2></div>
+            <p class="card-subtitle">Gemini, ChatGPT, Claude 등에서 생성한 JSON을 붙여넣으세요. 파싱 후 미리보기에서 필드를 수정하고 등록할 수 있습니다.</p>
+            <textarea id="tc-ai-json" class="tc-large-textarea" rows="10" placeholder='{"testCases":[{"title":"플레이어 점프 재현 테스트","purpose":"점프 입력 시 바닥을 통과하는 문제를 재현한다","preconditions":["Windows 빌드 실행","테스트 구역 진입"],"steps":["플레이어를 평평한 바닥에 세운다","점프 키를 한 번 누른다"],"expectedResults":["플레이어가 바닥을 통과하지 않는다"],"relatedIssueIds":["#1"],"priority":"High","category":"재현 테스트","platform":"Windows","status":"Draft"}]}'> </textarea>
+            <div class="form-actions"><button class="btn btn-primary" id="btn-parse-ai-json" type="button">JSON 검수 및 미리보기</button><span id="tc-json-status" class="inline-status" role="status"></span></div>
+            <div id="tc-preview-container" class="tc-preview-container" style="display:none">
+              <h3>등록 전 미리보기</h3><p class="card-subtitle">필수 항목이 비어 있으면 직접 수정해 주세요. 관련 이슈 ID와 중복 가능성도 확인합니다.</p>
+              <div id="tc-preview-list"></div>
+              <div class="form-actions"><button class="btn btn-primary" id="btn-register-preview" type="button">검수한 테스트 케이스 등록</button><button class="btn btn-secondary" id="btn-clear-preview" type="button">미리보기 지우기</button></div>
+            </div>
+          </div>
+
+          <div class="card" id="tc-editor-card" style="display:none">
+            <div class="card-header"><h2 id="tc-editor-heading">테스트 케이스 편집</h2><span id="tc-editor-id" class="inline-status"></span></div>
+            <form id="tc-editor-form" class="data-form">
+              <div class="form-grid">
+                <label class="wide-field">테스트 제목 *<input id="tc-edit-title" required maxlength="240"></label>
+                <label class="wide-field">테스트 목적<textarea id="tc-edit-purpose" rows="2"></textarea></label>
+                <label class="wide-field">사전 조건 *<textarea id="tc-edit-preconditions" rows="3" placeholder="한 줄에 한 조건"></textarea></label>
+                <label class="wide-field">실행 절차 *<textarea id="tc-edit-steps" rows="4" placeholder="한 줄에 한 단계"></textarea></label>
+                <label class="wide-field">기대 결과 *<textarea id="tc-edit-expected" rows="3" placeholder="한 줄에 한 기대 결과"></textarea></label>
+                <label>관련 이슈 ID<input id="tc-edit-issues" placeholder="예: #1, issue-... (쉼표 구분)"></label>
+                <label>우선순위<select id="tc-edit-priority"><option>High</option><option selected>Medium</option><option>Low</option></select></label>
+                <label>테스트 분류<input id="tc-edit-category" placeholder="예: 재현 테스트"></label>
+                <label>플랫폼<select id="tc-edit-platform"><option>Windows</option><option>Windows 10</option><option>Windows 11</option><option>기타</option></select></label>
+                <label>작성 상태<select id="tc-edit-status"><option>Draft</option><option>Ready</option><option>Archived</option></select></label>
+              </div>
+              <div id="tc-editor-warning" class="alert-box warning" style="display:none"></div>
+              <div class="form-actions wrap-actions"><button class="btn btn-primary" type="submit">테스트 케이스 저장</button><button class="btn btn-secondary" id="btn-cancel-tc-edit" type="button">취소</button><button class="btn btn-danger" id="btn-delete-tc" type="button" style="display:none">테스트 케이스 삭제</button></div>
+            </form>
+          </div>
+        </section>
+
+        <!-- 화면 4: 수동 테스트 실행 및 이력 -->
+        <section id="view-execution" class="view-section">
+          <div class="card">
+            <div class="card-header"><div><h2>테스트 실행 대상</h2><p class="card-subtitle">테스트는 사용자가 직접 실행하고 결과를 기록합니다. 게임 자동 실행은 하지 않습니다.</p></div><button class="btn btn-secondary" id="btn-refresh-execution" type="button">목록 새로고침</button></div>
+            <div class="tc-filters execution-filters">
+              <label>제목 검색<input id="run-filter-title" placeholder="테스트 제목 검색"></label>
+              <label>최근 결과<select id="run-filter-result"><option value="">전체 결과</option><option>Not Run</option><option>PASS</option><option>FAIL</option><option>BLOCKED</option></select></label>
+            </div>
+            <div class="table-wrapper"><table class="issue-table tc-table"><thead><tr><th>테스트 케이스 ID</th><th>테스트 제목</th><th>관련 이슈</th><th>우선순위</th><th>최근 결과</th><th>실행 일시</th><th>작업</th></tr></thead><tbody id="run-testcase-body"></tbody></table></div>
+            <p id="run-empty-state" class="tc-empty">현재 프로젝트에 테스트 케이스가 없습니다. 먼저 테스트 케이스를 등록해 주세요.</p>
+          </div>
+
+          <div class="card" id="run-editor-card">
+            <div class="card-header"><div><h2>테스트 결과 기록</h2><p class="card-subtitle">저장할 때마다 새 실행 이력이 추가됩니다. 과거 기록은 덮어쓰지 않습니다.</p></div><span id="run-selected-tc" class="inline-status">테스트 케이스를 선택해 주세요.</span></div>
+            <form id="run-form" class="data-form">
+              <input id="run-testcase-id" type="hidden">
+              <div class="form-grid">
+                <label class="wide-field">테스트 케이스<select id="run-testcase-select" required><option value="">테스트 케이스 선택</option></select></label>
+                <label>실행 결과<select id="run-result"><option>Not Run</option><option>PASS</option><option>FAIL</option><option>BLOCKED</option></select></label>
+                <label>실행 일시<input id="run-date" type="datetime-local" required></label>
+                <label>게임 버전<input id="run-game-version" maxlength="80" placeholder="프로젝트 버전 자동 입력"></label>
+                <label>빌드 버전<input id="run-build-version" maxlength="100" placeholder="프로젝트 빌드 버전 자동 입력"></label>
+                <label>Windows 환경<input id="run-windows" value="Windows 11" maxlength="120"></label>
+                <label>화면 해상도<input id="run-resolution" value="1920 × 1080" maxlength="60"></label>
+                <label class="wide-field">실제 결과<textarea id="run-actual-result" rows="3" placeholder="실제로 관찰한 결과를 기록하세요."></textarea></label>
+                <label class="wide-field">메모 / 실행을 막은 원인<textarea id="run-notes" rows="3" placeholder="FAIL 원인이라고 단정하지 말고 관찰 내용이나 BLOCKED 사유를 기록하세요."></textarea></label>
+                <label class="wide-field">다음 실행 참고 사항<textarea id="run-next-notes" rows="2" placeholder="다시 실행할 때 확인할 사항"></textarea></label>
+              </div>
+              <div id="run-result-guidance" class="alert-box warning" style="display:none"></div>
+              <div class="form-actions wrap-actions"><button class="btn btn-primary" type="submit">실행 기록 저장</button><button class="btn btn-secondary" id="btn-reset-run-form" type="button">입력 초기화</button></div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h2>실행 이력</h2><span id="run-history-count" class="inline-status">0건</span></div>
+            <div class="table-wrapper"><table class="issue-table tc-table"><thead><tr><th>실행 ID</th><th>테스트 케이스</th><th>결과</th><th>실행 일시</th><th>버전 / 해상도</th><th>상세</th></tr></thead><tbody id="run-history-body"></tbody></table></div>
+            <p id="run-history-empty" class="tc-empty">아직 실행 기록이 없습니다.</p>
+          </div>
+          <div class="card" id="run-detail-card" style="display:none"><div class="card-header"><h2>실행 기록 상세</h2><button class="btn btn-secondary" id="btn-close-run-detail" type="button">닫기</button></div><div id="run-detail-content"></div><div class="form-actions wrap-actions"><button class="btn btn-secondary" id="btn-compare-run" type="button">이전 실행과 비교</button><button class="btn btn-primary" id="btn-run-to-bug-report" type="button" style="display:none">버그 리포트 작성</button></div><div id="run-compare-content" class="run-compare" style="display:none"></div></div>
+        </section>
+
+        <!-- 화면 5: 버그 리포트 작성 및 관리 -->
+        <section id="view-reports" class="view-section">
+          <div class="card"><div class="card-header"><h2>버그 리포트</h2><button class="btn btn-primary" id="btn-new-bug-report" type="button">+ 새 리포트</button></div><p class="card-subtitle">FAIL 실행 기록에서 관찰한 값을 가져옵니다. 원인은 자동 판정하지 않으며, 실행 기록에 없는 정보는 직접 입력해 주세요.</p>
+            <div class="table-wrapper"><table class="issue-table tc-table"><thead><tr><th>리포트 ID</th><th>제목</th><th>상태</th><th>심각도</th><th>우선순위</th><th>생성 일시</th><th>작업</th></tr></thead><tbody id="bug-report-list"></tbody></table></div>
+            <p id="bug-report-empty" class="tc-empty">저장된 버그 리포트가 없습니다. FAIL 실행 기록 상세에서 리포트를 작성할 수 있습니다.</p>
+          </div>
+          <div class="card"><div class="card-header"><h2 id="bug-report-editor-heading">버그 리포트 작성</h2><span id="bug-report-id" class="inline-status"></span></div><p class="card-subtitle">심각도는 영향 범위 기준으로 직접 선택하세요: Blocker(진행 불가), Critical(핵심 기능 장애), Major(주요 기능 장애), Minor(제한적 영향), Trivial(경미한 표시·문구 문제).</p>
+            <form id="bug-report-form" class="data-form"><div class="form-grid">
+              <label class="wide-field">제목<input id="bug-report-title" required maxlength="240" placeholder="[BUG] 재현 가능한 현상"></label>
+              <label>상태<select id="bug-report-state"><option>Draft</option><option>Reported</option><option>Fixing</option><option>Fixed</option><option>Retest Passed</option><option>Reopened</option></select></label>
+              <label>심각도<select id="bug-report-severity"><option value="">선택 필요</option><option>Blocker</option><option>Critical</option><option>Major</option><option>Minor</option><option>Trivial</option></select></label>
+              <label>우선순위<select id="bug-report-priority"><option value="">선택 필요</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+              <label>관련 이슈 ID<input id="bug-report-issue" placeholder="예: #1"></label><label>테스트 케이스 ID<input id="bug-report-tc" readonly></label>
+              <label class="wide-field">테스트 실행 ID<input id="bug-report-run" readonly></label>
+              <label>게임 버전<input id="bug-report-game-version"></label><label>빌드 버전<input id="bug-report-build-version"></label>
+              <label>플랫폼<input id="bug-report-platform" placeholder="미기록이면 직접 입력"></label><label>실행 환경<input id="bug-report-runtime" placeholder="예: Windows 11"></label>
+              <label>해상도<input id="bug-report-resolution"></label><label>발생 빈도<input id="bug-report-frequency" placeholder="예: 3회 중 2회"></label>
+              <label class="wide-field">사전 조건<textarea id="bug-report-preconditions" rows="3" placeholder="한 줄에 한 조건"></textarea></label>
+              <label class="wide-field">재현 절차<textarea id="bug-report-steps" rows="4" placeholder="한 줄에 한 단계"></textarea></label>
+              <label class="wide-field">기대 결과<textarea id="bug-report-expected" rows="3"></textarea></label>
+              <label class="wide-field">실제 결과<textarea id="bug-report-actual" rows="3"></textarea></label>
+              <label class="wide-field">확인된 사실<textarea id="bug-report-facts" rows="3" placeholder="직접 확인한 사실만 입력"></textarea></label>
+              <label class="wide-field">추정 원인<textarea id="bug-report-cause" rows="2" placeholder="검증되지 않은 원인은 가설로 표시"></textarea></label>
+              <label class="wide-field">첨부 증거 또는 추가 메모<textarea id="bug-report-notes" rows="3" placeholder="원인은 검증 전까지 가설로 기록하세요."></textarea></label>
+            </div><div class="form-actions wrap-actions"><button class="btn btn-primary" type="submit">리포트 저장</button><button class="btn btn-secondary" id="btn-reset-bug-report" type="button">새 리포트 작성</button><button class="btn btn-secondary" id="btn-copy-bug-report" type="button">Markdown 복사</button><button class="btn btn-secondary" id="btn-open-bug-run" type="button">관련 실행 기록 보기</button><button class="btn btn-danger" id="btn-delete-bug-report" type="button" style="display:none">리포트 삭제</button><span id="bug-report-status" class="inline-status" role="status"></span></div></form>
+            <div id="bug-report-preview" class="bug-report-preview"></div>
+          </div>
+          <div class="card mail-draft-card">
+            <div class="card-header mail-draft-header"><div><h2>메일 초안</h2><p class="card-subtitle">선택한 버그 리포트의 정보를 바탕으로 수정 요청 문안을 준비합니다.</p></div><span class="mail-draft-badge">초안 복사</span></div>
+            <div class="notice-box mail-draft-notice">메일은 발송되지 않습니다. 내용을 검토하고 복사해 메일 앱에서 직접 사용하세요.</div>
+            <div class="data-form mail-draft-form">
+              <div class="form-grid mail-draft-grid">
+                <label>버그 리포트<select id="mail-draft-report"><option value="">리포트 선택</option></select></label>
+                <label>수신자 <span class="mail-optional">선택 사항 · 직접 입력</span><input id="mail-draft-recipient" type="email" placeholder="이메일 주소"></label>
+                <label class="wide-field">제목<input id="mail-draft-subject" maxlength="240" placeholder="리포트를 선택해 초안을 생성하세요."></label>
+                <label class="wide-field">본문<textarea id="mail-draft-body" rows="15" placeholder="생성된 문안을 편집할 수 있습니다."></textarea></label>
+              </div>
+              <div class="mail-draft-actions"><button class="btn btn-primary" id="btn-generate-mail-draft" type="button">초안 생성</button><button class="btn btn-secondary" id="btn-save-mail-draft" type="button">초안 저장</button><span class="mail-action-divider"></span><button class="btn btn-secondary" id="btn-copy-mail-subject" type="button">제목 복사</button><button class="btn btn-secondary" id="btn-copy-mail-body" type="button">메일 초안 복사</button></div>
+              <span id="mail-draft-status" class="inline-status mail-draft-status" role="status"></span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
