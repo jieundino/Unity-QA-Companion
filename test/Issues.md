@@ -29,7 +29,7 @@
   - 커스텀 직렬화 로직에서 Dictionary<int, bool> 타입 분기가 누락되어 기본 ToString()으로 직렬화된 것이 원인.
   - "dict:int-bool" 명시적 타입 태그 및 JSON 문자열 직렬화/역직렬화 로직을 추가하고, 구버전·손상 세이브 파일 로드 시 빈 Dictionary로 안전하게 복구(Fallback)되도록 방어 코드 적용 완료.
 
-## [Closed] #12 회상 선택 반복 적용으로 인한 ResponsibilityScore 중복 누적 가능성
+## [Closed] #12 회상 선택 재적용 시 ResponsibilityScore가 중복 증가하는 문제
 
 - 문서 ID: ISSUE-012 (Responsibility Score / Memory Puzzle State)
 - 심각도: Major
@@ -41,8 +41,8 @@
 - 실제 결과:
   - 회상 선택 시 점수를 단순 증감(++)으로 누적하여, 동일 회상이 재적용될 때 전체 완료한 회상 퍼즐 개수보다 ResponsibilityScore가 비정상적으로 높게 누적된다.
 - 원인 및 수정 요약:
-  - ResponsibilityScore를 MemoryPuzzleStates와 분리된 독립 누적 변수로 관리한 것이 원인.
-  - MemoryPuzzleStates(Dictionary<int, bool>)를 단일 진실원천(Single Source of Truth)으로 삼아 Result_MemoryChoiceUpdated 시점에 true 개수로 점수를 재계산(Set)하고 ResponsibilityManager.ChangeResponsibilityGauge()를 동기화하도록 개선 완료.
+  - ResponsibilityScore를 MemoryPuzzleStates와 별도 변수로 두고 단순 증감(++) 처리한 것이 원인.
+  - Result_MemoryChoiceUpdated 호출 시 MemoryPuzzleStates(Dictionary<int, bool>)의 true 개수를 기준으로 점수를 다시 계산해 대입하도록 수정하고, ResponsibilityManager.ChangeResponsibilityGauge()에 반영.
 
 ## [Closed] #13 PuzzleMemoryManager 이름 치환 시점 오류
 
@@ -58,7 +58,7 @@
   - PuzzleMemoryManager.Awake()에서 CSV 파싱 직후 ProcessPlaceholders()를 1회만 수행해 이름 입력 이전의 임시값이 choiceTextDictionary에 고정된 것이 원인.
   - 원문 보관용 memoryDictionary와 UI 출력용 choiceTextDictionary를 분리하고, 퍼즐 가방 UI를 열 때마다 UpdateHomePuzzleState()에서 최신 GameManager 이름 변수로 동적 치환하도록 수정 완료.
 
-## [Closed] #14 UnityEvent의 씬 경계 참조 문제로 인한 서비스 호출 불안정
+## [Closed] #14 씬 전환 후 튜토리얼 UnityEvent의 싱글톤 매니저 참조 유실
 
 - 문서 ID: ISSUE-014 (Tutorial Event / ServiceAction Command Pattern)
 - 심각도: Major
@@ -69,7 +69,8 @@
 - 실제 결과:
   - 다른 씬에 존재하는 싱글톤 오브젝트를 프리팹/씬 UnityEvent 인스펙터에 직접 바인딩할 수 없거나, 씬 전환 후 참조가 유실되어 튜토리얼 연출 및 사운드/UI 호출이 누락된다.
 - 원인 및 수정 요약:
-  - UnityEvent의 씬 오브젝트 직렬화 한계를 해결하기 위해 ScriptableObject 기반 ServiceCallAction 커맨드 패턴(SerializeReference CallPayload)을 도입하고, 실행 시점에 Instance ?? FindObjectOfType<T>(true)로 런타임 서비스를 안전하게 탐색하도록 리팩터링 완료.
+  - 씬에 배치된 UnityEvent가 다른 씬에서 넘어온 DontDestroyOnLoad 싱글톤을 직접 직렬화하지 못해 발생.
+  - ScriptableObject 기반 ServiceCallAction(SerializeReference CallPayload)으로 호출 방식을 바꾸고, 실행 시점에 Instance ?? FindObjectOfType<T>(true)로 매니저를 찾아 호출하도록 수정.
 
 ## [In Progress] #15 Stage3 추격 마지막 NPC 발걸음 미재생
 
