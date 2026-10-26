@@ -1,796 +1,821 @@
 {
   "schemaVersion": 4,
-  "backupCreatedAt": "2026-10-22T04:10:28.600Z",
+  "backupCreatedAt": "2026-10-22T06:30:00.000Z",
   "projects": [
     {
       "id": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
       "name": "Four Footsteps",
-      "description": "Unity/C# 기반 2D 내러티브 게임 '네 발자국'",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "createdAt": "2026-10-21",
-      "updatedAt": "2026-10-22T02:34:49.503Z"
+      "description": "Unity/C# 기반 2D 내러티브 어드벤처 게임 '네 발자국' — 실제 런타임 이슈(ISSUE-010 ~ ISSUE-016) 기반 QA 검증 데이터셋",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "createdAt": "2026-10-18",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
     }
   ],
   "issues": [
     {
-      "id": "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247",
+      "id": "issue-ff-010-dialogue-skip-cutscene",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "number": "1",
-      "title": "플레이어 점프 시 바닥 뚫림",
-      "status": "Open",
-      "description": "- 재현 경로: 스페이스 연타",
-      "rawMarkdown": "## [Open] #1 플레이어 점프 시 바닥 뚫림\n\n\n- 재현 경로: 스페이스 연타\n\n",
+      "number": "10",
+      "title": "스킵 시 마지막 라인 컷씬/자동진행 미동작",
+      "status": "Closed",
+      "description": "- 문서 ID: ISSUE-010 (Dialogue Skip / Cutscene Flow)\n- 심각도: Critical\n- 발생 환경: Windows 11 (1920×1080), 프롤로그 대화 시퀀스(001_Prologue1) 및 컷씬 전환 구간\n- 재현 경로:\n  1. 001_Prologue1 등 컷씬(BLACK), AUTO_DELAYED, FADE_OUT 태그가 포함된 대화를 시작한다.\n  2. 대화가 마지막 라인에 도달하기 전에 Skip 버튼을 클릭하거나, 검은 화면 페이드(FadeToBlack) 도중 Skip을 클릭한다.\n  3. 마지막 대사 출력 이후의 화면 전환 및 클릭 입력 반응 여부를 관찰한다.\n- 실제 결과:\n  - 마지막 라인에 설정된 BLACK 컷씬 전환, AUTO_DELAYED 자동 진행, FADE_OUT 연출이 실행되지 않고 대화창이 정지한다.\n  - FadeToBlack() 도중 Skip 클릭 시 StopAllCoroutines()로 코루틴이 중단되면서 isCutsceneFadingToBlack = true 상태가 잔존해 이후 대화 클릭 입력이 영구 차단된다.\n- 원인 및 수정 요약:\n  - SkipButtonClick()이 일반 타이핑 완료 경로(TypeSentence)를 우회하고 코루틴 중단 후 상태 플래그를 복구하지 않아 발생.\n  - isSkippingToLast 플래그 도입, 스킵 시 isCutsceneFadingToBlack / isCoverTransitioning 명시적 false 초기화, BLACK 즉시 반영 및 AfterLineFullyShownRoutine() 공통 후처리 루틴 호출로 수정 완료.",
+      "rawMarkdown": "## [Closed] #10 스킵 시 마지막 라인 컷씬/자동진행 미동작\n\n- 문서 ID: ISSUE-010 (Dialogue Skip / Cutscene Flow)\n- 심각도: Critical\n- 발생 환경: Windows 11 (1920×1080), 프롤로그 대화 시퀀스(001_Prologue1) 및 컷씬 전환 구간\n- 재현 경로:\n  1. 001_Prologue1 등 컷씬(BLACK), AUTO_DELAYED, FADE_OUT 태그가 포함된 대화를 시작한다.\n  2. 대화가 마지막 라인에 도달하기 전에 Skip 버튼을 클릭하거나, 검은 화면 페이드(FadeToBlack) 도중 Skip을 클릭한다.\n  3. 마지막 대사 출력 이후의 화면 전환 및 클릭 입력 반응 여부를 관찰한다.\n- 실제 결과:\n  - 마지막 라인에 설정된 BLACK 컷씬 전환, AUTO_DELAYED 자동 진행, FADE_OUT 연출이 실행되지 않고 대화창이 정지한다.\n  - FadeToBlack() 도중 Skip 클릭 시 StopAllCoroutines()로 코루틴이 중단되면서 isCutsceneFadingToBlack = true 상태가 잔존해 이후 대화 클릭 입력이 영구 차단된다.\n- 원인 및 수정 요약:\n  - SkipButtonClick()이 일반 타이핑 완료 경로(TypeSentence)를 우회하고 코루틴 중단 후 상태 플래그를 복구하지 않아 발생.\n  - isSkippingToLast 플래그 도입, 스킵 시 isCutsceneFadingToBlack / isCoverTransitioning 명시적 false 초기화, BLACK 즉시 반영 및 AfterLineFullyShownRoutine() 공통 후처리 루틴 호출로 수정 완료.\n",
       "source": "markdown",
       "modified": false,
       "sourceFile": "Issues.md",
       "lineStart": 1,
       "warnings": [],
-      "createdAt": "2026-10-21T07:59:08.682Z",
-      "updatedAt": "2026-10-21T07:59:08.682Z"
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
     },
     {
-      "id": "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd",
+      "id": "issue-ff-011-save-load-dict-serialization",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "number": "2",
-      "title": "사운드 음소거 미작동",
+      "number": "11",
+      "title": "MemoryPuzzleStates 직렬화 오류로 인한 Save/Load 실패",
       "status": "Closed",
-      "description": "",
-      "rawMarkdown": "## [Closed] #2 사운드 음소거 미작동",
+      "description": "- 문서 ID: ISSUE-011 (Save / Load Serialization)\n- 심각도: Critical\n- 발생 환경: Windows 11, 이어하기(Continue) 및 수동 세이브 슬롯 로드 시점\n- 재현 경로:\n  1. 게임 플레이 중 회상 퍼즐 선택 상태(MemoryPuzzleStates)가 갱신된 시점에서 세이브를 수행한다.\n  2. 타이틀 화면 또는 메뉴에서 해당 세이브 파일을 이어하기(Load)로 불러온다.\n- 실제 결과:\n  - SaveData.ToJson() 및 SaveManager.ApplySavedGameData() 과정에서 NullReferenceException이 발생하며 로드에 실패한다.\n  - 저장된 JSON 파일을 확인하면 MemoryPuzzleStates(Dictionary<int, bool>)가 JSON 객체가 아닌 \"System.Collections.Generic.Dictionary`2[System.Int32,System.Boolean]\" 문자열(ToString())로 기록되어 있다.\n- 원인 및 수정 요약:\n  - 커스텀 직렬화 로직에서 Dictionary<int, bool> 타입 분기가 누락되어 기본 ToString()으로 직렬화된 것이 원인.\n  - \"dict:int-bool\" 명시적 타입 태그 및 JSON 문자열 직렬화/역직렬화 로직을 추가하고, 구버전·손상 세이브 파일 로드 시 빈 Dictionary로 안전하게 복구(Fallback)되도록 방어 코드 적용 완료.",
+      "rawMarkdown": "## [Closed] #11 MemoryPuzzleStates 직렬화 오류로 인한 Save/Load 실패\n\n- 문서 ID: ISSUE-011 (Save / Load Serialization)\n- 심각도: Critical\n- 발생 환경: Windows 11, 이어하기(Continue) 및 수동 세이브 슬롯 로드 시점\n- 재현 경로:\n  1. 게임 플레이 중 회상 퍼즐 선택 상태(MemoryPuzzleStates)가 갱신된 시점에서 세이브를 수행한다.\n  2. 타이틀 화면 또는 메뉴에서 해당 세이브 파일을 이어하기(Load)로 불러온다.\n- 실제 결과:\n  - SaveData.ToJson() 및 SaveManager.ApplySavedGameData() 과정에서 NullReferenceException이 발생하며 로드에 실패한다.\n  - 저장된 JSON 파일을 확인하면 MemoryPuzzleStates(Dictionary<int, bool>)가 JSON 객체가 아닌 \"System.Collections.Generic.Dictionary`2[System.Int32,System.Boolean]\" 문자열(ToString())로 기록되어 있다.\n- 원인 및 수정 요약:\n  - 커스텀 직렬화 로직에서 Dictionary<int, bool> 타입 분기가 누락되어 기본 ToString()으로 직렬화된 것이 원인.\n  - \"dict:int-bool\" 명시적 타입 태그 및 JSON 문자열 직렬화/역직렬화 로직을 추가하고, 구버전·손상 세이브 파일 로드 시 빈 Dictionary로 안전하게 복구(Fallback)되도록 방어 코드 적용 완료.\n",
       "source": "markdown",
       "modified": false,
       "sourceFile": "Issues.md",
-      "lineStart": 7,
-      "warnings": [
-        "이슈의 세부 설명(본문)이 비어 있습니다."
-      ],
-      "createdAt": "2026-10-21T07:59:08.682Z",
-      "updatedAt": "2026-10-21T07:59:08.682Z"
+      "lineStart": 17,
+      "warnings": [],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
     },
     {
-      "id": "issue-7f7c30db-964d-434d-8fb3-1af83361c785",
+      "id": "issue-ff-012-responsibility-score-ssot",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "number": "",
-      "title": "PuzzleMemoryManager 이름 치환 시점 오류",
-      "status": "In Progress",
-      "description": "- 재현 경로: 퍼즐 가방 UI에서 회상 텍스트를 표시할 때, 플레이어 이름 또는 고양이 이름이 사용자가 입력한 실제 이름이 아니라 초기 임시값으로 표시되는 문제가 있었습니다.\n이로 인해 사용자가 프롤로그에서 이름을 설정했음에도, 회상 텍스트에는 변경 전 이름이 반영될 수 있었습니다.",
-      "rawMarkdown": "",
-      "source": "manual",
-      "modified": true,
+      "number": "12",
+      "title": "회상 선택 반복 적용으로 인한 ResponsibilityScore 중복 누적 가능성",
+      "status": "Closed",
+      "description": "- 문서 ID: ISSUE-012 (Responsibility Score / Memory Puzzle State)\n- 심각도: Major\n- 발생 환경: Windows 11, 회상 퍼즐 재진입 및 Save/Load 반복 구간\n- 재현 경로:\n  1. 회상 퍼즐에서 긍정 선택지를 골라 ResponsibilityScore가 증가한 상태를 만든다.\n  2. 세이브/로드 또는 회상 이벤트 재진입을 통해 동일 회상 선택이 다시 평가되는 경로를 반복 수행한다.\n  3. 현재 ResponsibilityScore 수치와 선택지 잠금 조건, 엔딩 분기 판정 상태를 확인한다.\n- 실제 결과:\n  - 회상 선택 시 점수를 단순 증감(++)으로 누적하여, 동일 회상이 재적용될 때 전체 완료한 회상 퍼즐 개수보다 ResponsibilityScore가 비정상적으로 높게 누적된다.\n- 원인 및 수정 요약:\n  - ResponsibilityScore를 MemoryPuzzleStates와 분리된 독립 누적 변수로 관리한 것이 원인.\n  - MemoryPuzzleStates(Dictionary<int, bool>)를 단일 진실원천(Single Source of Truth)으로 삼아 Result_MemoryChoiceUpdated 시점에 true 개수로 점수를 재계산(Set)하고 ResponsibilityManager.ChangeResponsibilityGauge()를 동기화하도록 개선 완료.",
+      "rawMarkdown": "## [Closed] #12 회상 선택 반복 적용으로 인한 ResponsibilityScore 중복 누적 가능성\n\n- 문서 ID: ISSUE-012 (Responsibility Score / Memory Puzzle State)\n- 심각도: Major\n- 발생 환경: Windows 11, 회상 퍼즐 재진입 및 Save/Load 반복 구간\n- 재현 경로:\n  1. 회상 퍼즐에서 긍정 선택지를 골라 ResponsibilityScore가 증가한 상태를 만든다.\n  2. 세이브/로드 또는 회상 이벤트 재진입을 통해 동일 회상 선택이 다시 평가되는 경로를 반복 수행한다.\n  3. 현재 ResponsibilityScore 수치와 선택지 잠금 조건, 엔딩 분기 판정 상태를 확인한다.\n- 실제 결과:\n  - 회상 선택 시 점수를 단순 증감(++)으로 누적하여, 동일 회상이 재적용될 때 전체 완료한 회상 퍼즐 개수보다 ResponsibilityScore가 비정상적으로 높게 누적된다.\n- 원인 및 수정 요약:\n  - ResponsibilityScore를 MemoryPuzzleStates와 분리된 독립 누적 변수로 관리한 것이 원인.\n  - MemoryPuzzleStates(Dictionary<int, bool>)를 단일 진실원천(Single Source of Truth)으로 삼아 Result_MemoryChoiceUpdated 시점에 true 개수로 점수를 재계산(Set)하고 ResponsibilityManager.ChangeResponsibilityGauge()를 동기화하도록 개선 완료.\n",
+      "source": "markdown",
+      "modified": false,
+      "sourceFile": "Issues.md",
+      "lineStart": 32,
       "warnings": [],
-      "createdAt": "2026-10-21T07:59:23.854Z",
-      "updatedAt": "2026-10-21T08:06:52.969Z"
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
+    },
+    {
+      "id": "issue-ff-013-puzzle-memory-name-placeholder",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "number": "13",
+      "title": "PuzzleMemoryManager 이름 치환 시점 오류",
+      "status": "Closed",
+      "description": "- 문서 ID: ISSUE-013 (Puzzle Memory UI / Placeholder Processing)\n- 심각도: Major\n- 발생 환경: Windows 11, 프롤로그 이름 설정 이후 퍼즐 가방(회상) UI 진입 구간\n- 재현 경로:\n  1. 프롤로그에서 플레이어 이름과 고양이 이름을 기본값이 아닌 사용자 지정 이름으로 입력한다.\n  2. 스테이지 진입 후 퍼즐 가방 UI를 열어 해금된 회상 텍스트의 이름 표시 상태를 확인한다.\n- 실제 결과:\n  - 플레이어가 프롤로그에서 설정한 실제 이름이 아니라 초기화 시점의 임시 기본 이름이 회상 텍스트에 그대로 출력된다.\n- 원인 및 수정 요약:\n  - PuzzleMemoryManager.Awake()에서 CSV 파싱 직후 ProcessPlaceholders()를 1회만 수행해 이름 입력 이전의 임시값이 choiceTextDictionary에 고정된 것이 원인.\n  - 원문 보관용 memoryDictionary와 UI 출력용 choiceTextDictionary를 분리하고, 퍼즐 가방 UI를 열 때마다 UpdateHomePuzzleState()에서 최신 GameManager 이름 변수로 동적 치환하도록 수정 완료.",
+      "rawMarkdown": "## [Closed] #13 PuzzleMemoryManager 이름 치환 시점 오류\n\n- 문서 ID: ISSUE-013 (Puzzle Memory UI / Placeholder Processing)\n- 심각도: Major\n- 발생 환경: Windows 11, 프롤로그 이름 설정 이후 퍼즐 가방(회상) UI 진입 구간\n- 재현 경로:\n  1. 프롤로그에서 플레이어 이름과 고양이 이름을 기본값이 아닌 사용자 지정 이름으로 입력한다.\n  2. 스테이지 진입 후 퍼즐 가방 UI를 열어 해금된 회상 텍스트의 이름 표시 상태를 확인한다.\n- 실제 결과:\n  - 플레이어가 프롤로그에서 설정한 실제 이름이 아니라 초기화 시점의 임시 기본 이름이 회상 텍스트에 그대로 출력된다.\n- 원인 및 수정 요약:\n  - PuzzleMemoryManager.Awake()에서 CSV 파싱 직후 ProcessPlaceholders()를 1회만 수행해 이름 입력 이전의 임시값이 choiceTextDictionary에 고정된 것이 원인.\n  - 원문 보관용 memoryDictionary와 UI 출력용 choiceTextDictionary를 분리하고, 퍼즐 가방 UI를 열 때마다 UpdateHomePuzzleState()에서 최신 GameManager 이름 변수로 동적 치환하도록 수정 완료.\n",
+      "source": "markdown",
+      "modified": false,
+      "sourceFile": "Issues.md",
+      "lineStart": 47,
+      "warnings": [],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
+    },
+    {
+      "id": "issue-ff-014-tutorial-service-action-command",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "number": "14",
+      "title": "UnityEvent의 씬 경계 참조 문제로 인한 서비스 호출 불안정",
+      "status": "Closed",
+      "description": "- 문서 ID: ISSUE-014 (Tutorial Event / ServiceAction Command Pattern)\n- 심각도: Major\n- 발생 환경: Windows 11, 씬 전환 이후 진행되는 튜토리얼 노드 이벤트 실행 구간\n- 재현 경로:\n  1. 타이틀 씬에서 생성되어 DontDestroyOnLoad로 유지되는 싱글톤 매니저(SoundPlayer, UIManager, GameManager)가 존재하는 상태에서 스테이지 씬으로 전환한다.\n  2. 인스펙터 UnityEvent로 매니저 메서드를 연결해 둔 튜토리얼 노드를 실행한다.\n- 실제 결과:\n  - 다른 씬에 존재하는 싱글톤 오브젝트를 프리팹/씬 UnityEvent 인스펙터에 직접 바인딩할 수 없거나, 씬 전환 후 참조가 유실되어 튜토리얼 연출 및 사운드/UI 호출이 누락된다.\n- 원인 및 수정 요약:\n  - UnityEvent의 씬 오브젝트 직렬화 한계를 해결하기 위해 ScriptableObject 기반 ServiceCallAction 커맨드 패턴(SerializeReference CallPayload)을 도입하고, 실행 시점에 Instance ?? FindObjectOfType<T>(true)로 런타임 서비스를 안전하게 탐색하도록 리팩터링 완료.",
+      "rawMarkdown": "## [Closed] #14 UnityEvent의 씬 경계 참조 문제로 인한 서비스 호출 불안정\n\n- 문서 ID: ISSUE-014 (Tutorial Event / ServiceAction Command Pattern)\n- 심각도: Major\n- 발생 환경: Windows 11, 씬 전환 이후 진행되는 튜토리얼 노드 이벤트 실행 구간\n- 재현 경로:\n  1. 타이틀 씬에서 생성되어 DontDestroyOnLoad로 유지되는 싱글톤 매니저(SoundPlayer, UIManager, GameManager)가 존재하는 상태에서 스테이지 씬으로 전환한다.\n  2. 인스펙터 UnityEvent로 매니저 메서드를 연결해 둔 튜토리얼 노드를 실행한다.\n- 실제 결과:\n  - 다른 씬에 존재하는 싱글톤 오브젝트를 프리팹/씬 UnityEvent 인스펙터에 직접 바인딩할 수 없거나, 씬 전환 후 참조가 유실되어 튜토리얼 연출 및 사운드/UI 호출이 누락된다.\n- 원인 및 수정 요약:\n  - UnityEvent의 씬 오브젝트 직렬화 한계를 해결하기 위해 ScriptableObject 기반 ServiceCallAction 커맨드 패턴(SerializeReference CallPayload)을 도입하고, 실행 시점에 Instance ?? FindObjectOfType<T>(true)로 런타임 서비스를 안전하게 탐색하도록 리팩터링 완료.\n",
+      "source": "markdown",
+      "modified": false,
+      "sourceFile": "Issues.md",
+      "lineStart": 61,
+      "warnings": [],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
+    },
+    {
+      "id": "issue-ff-015-stage3-npc-footstep-audio",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "number": "15",
+      "title": "Stage3 추격 마지막 NPC 발걸음 미재생",
+      "status": "In Progress",
+      "description": "- 문서 ID: ISSUE-015 (Stage3 Chase / NPC Footstep Audio)\n- 심각도: Major\n- 발생 환경: Windows 11, Stage3 추격 시퀀스 마지막 NPC 자동 이동(NpcAutoMover) 연출 구간\n- 재현 경로:\n  1. Stage3 추격전을 진행하여 마지막 NPC가 등장해 이동하는 연출 구간에 진입한다.\n  2. NpcAutoMover에 의해 NPC가 이동할 때 발걸음 효과음(walkSound) 출력 여부를 확인한다.\n- 실제 결과:\n  - NpcAutoMover에서 walkInterval 주기로 AudioSource.PlayOneShot(walkSound)이 호출되지만 실제 인게임에서는 발걸음 소리가 전혀 들리지 않는다.\n- 원인 및 수정 요약:\n  - 동일 오브젝트의 ObjectSfxController(거리/환경음 페이드 및 정지 제어)와 NpcAutoMover가 같은 AudioSource 컴포넌트를 공유하여, 환경음 페이드 아웃 시 볼륨이 0이 되거나 Stop()이 호출되면서 PlayOneShot 출력이 함께 차단됨.\n  - NPC 발걸음 전용 AudioSource를 분리 배치하여 환경음 제어 경로와 단발성 발걸음 SFX 경로가 간섭하지 않도록 수정 반영 후 Stage3 후반부 빌드 재검증 진행 중.",
+      "rawMarkdown": "## [In Progress] #15 Stage3 추격 마지막 NPC 발걸음 미재생\n\n- 문서 ID: ISSUE-015 (Stage3 Chase / NPC Footstep Audio)\n- 심각도: Major\n- 발생 환경: Windows 11, Stage3 추격 시퀀스 마지막 NPC 자동 이동(NpcAutoMover) 연출 구간\n- 재현 경로:\n  1. Stage3 추격전을 진행하여 마지막 NPC가 등장해 이동하는 연출 구간에 진입한다.\n  2. NpcAutoMover에 의해 NPC가 이동할 때 발걸음 효과음(walkSound) 출력 여부를 확인한다.\n- 실제 결과:\n  - NpcAutoMover에서 walkInterval 주기로 AudioSource.PlayOneShot(walkSound)이 호출되지만 실제 인게임에서는 발걸음 소리가 전혀 들리지 않는다.\n- 원인 및 수정 요약:\n  - 동일 오브젝트의 ObjectSfxController(거리/환경음 페이드 및 정지 제어)와 NpcAutoMover가 같은 AudioSource 컴포넌트를 공유하여, 환경음 페이드 아웃 시 볼륨이 0이 되거나 Stop()이 호출되면서 PlayOneShot 출력이 함께 차단됨.\n  - NPC 발걸음 전용 AudioSource를 분리 배치하여 환경음 제어 경로와 단발성 발걸음 SFX 경로가 간섭하지 않도록 수정 반영 후 Stage3 후반부 빌드 재검증 진행 중.\n",
+      "source": "markdown",
+      "modified": false,
+      "sourceFile": "Issues.md",
+      "lineStart": 74,
+      "warnings": [],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
+    },
+    {
+      "id": "issue-ff-016-bgm-crossfade-fmod-memory",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "number": "16",
+      "title": "BGM 전환 중 오디오 메모리 부족 발생",
+      "status": "Open",
+      "description": "- 문서 ID: ISSUE-016 (SoundPlayer / BGM Resource Management)\n- 심각도: Critical\n- 발생 환경: Windows 11, 다중 씬 반복 전환 및 BGM 크로스페이드(ChangeDualBGM) 집중 구간\n- 재현 경로:\n  1. 씬 전환과 대화/이벤트 연출이 반복되는 구간을 연속 플레이하며 SoundPlayer.ChangeDualBGM()을 여러 차례 트리거한다.\n  2. BGM 페이드 인/아웃 도중 다음 씬으로 빠르게 전환하거나 회상 연출에 반복 진입한다.\n- 실제 결과:\n  - FadeInCoroutine() 내부의 AudioSource.Play() 호출 시점에 FMODSample 오디오 메모리 할당 실패(Out of Memory) 오류가 발생하며 BGM 재생이 중단된다.\n- 원인 및 수정 요약:\n  - 크로스페이드용 AudioSource 및 이전 페이드 코루틴, 장시간 BGM AudioClip 참조, UI 루프/타이핑 사운드가 씬 전환 시점에 즉시 해제되지 않고 누적된 것이 원인.\n  - Dual BGM AudioSource 2개 고정 재사용, StopAllBGMCoroutines() 및 SceneManager.activeSceneChanged 기반 CleanupBeforeSceneLoad() 도입, 정지 시 clip = null 해제, 대용량 BGM 클립의 Load Type = Streaming / Vorbis / Preload Audio Data 해제 적용 후 장기 플레이 회귀 테스트 대기 중.",
+      "rawMarkdown": "## [Open] #16 BGM 전환 중 오디오 메모리 부족 발생\n\n- 문서 ID: ISSUE-016 (SoundPlayer / BGM Resource Management)\n- 심각도: Critical\n- 발생 환경: Windows 11, 다중 씬 반복 전환 및 BGM 크로스페이드(ChangeDualBGM) 집중 구간\n- 재현 경로:\n  1. 씬 전환과 대화/이벤트 연출이 반복되는 구간을 연속 플레이하며 SoundPlayer.ChangeDualBGM()을 여러 차례 트리거한다.\n  2. BGM 페이드 인/아웃 도중 다음 씬으로 빠르게 전환하거나 회상 연출에 반복 진입한다.\n- 실제 결과:\n  - FadeInCoroutine() 내부의 AudioSource.Play() 호출 시점에 FMODSample 오디오 메모리 할당 실패(Out of Memory) 오류가 발생하며 BGM 재생이 중단된다.\n- 원인 및 수정 요약:\n  - 크로스페이드용 AudioSource 및 이전 페이드 코루틴, 장시간 BGM AudioClip 참조, UI 루프/타이핑 사운드가 씬 전환 시점에 즉시 해제되지 않고 누적된 것이 원인.\n  - Dual BGM AudioSource 2개 고정 재사용, StopAllBGMCoroutines() 및 SceneManager.activeSceneChanged 기반 CleanupBeforeSceneLoad() 도입, 정지 시 clip = null 해제, 대용량 BGM 클립의 Load Type = Streaming / Vorbis / Preload Audio Data 해제 적용 후 장기 플레이 회귀 테스트 대기 중.",
+      "source": "markdown",
+      "modified": false,
+      "sourceFile": "Issues.md",
+      "lineStart": 88,
+      "warnings": [],
+      "createdAt": "2026-10-18T09:00:00.000Z",
+      "updatedAt": "2026-10-22T06:30:00.000Z"
     }
   ],
   "testCases": [
     {
-      "id": "tc-5e6e67e3-5996-4437-95e1-b86a32073c5b",
+      "id": "tc-ff-010-01",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "플레이어 점프 시 바닥 통과 재현 테스트",
-      "purpose": "점프 입력 시 플레이어가 바닥을 통과하는 문제가 발생하는지 확인한다.",
+      "title": "프롤로그(001_Prologue1) 대화 진행 중 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 자동진행 검증",
+      "purpose": "컷씬(BLACK), AUTO_DELAYED, FADE_OUT이 포함된 대화에서 Skip 클릭 시 마지막 라인 연출과 후속 자동 진행이 누락 없이 동작하는지 확인한다.",
       "preconditions": [
-        "Windows 데스크톱 빌드를 실행한다.",
-        "플레이어가 이동할 수 있는 테스트 구역에 진입한다.",
-        "바닥 충돌이 발생하는 위치에 플레이어를 둔다."
+        "Windows 데스크톱 빌드(1920×1080)를 실행한다.",
+        "새 게임을 시작하여 001_Prologue1 대화 시퀀스에 진입한다."
       ],
       "steps": [
-        "플레이어를 평평한 바닥 위에 위치시킨다.",
-        "점프 입력을 한 번 수행한다.",
-        "플레이어의 이동과 바닥 충돌 상태를 관찰한다."
+        "대화 타이핑이 진행 중일 때 우측 상단 Skip 버튼을 클릭한다.",
+        "마지막 라인 대사가 즉시 완성된 후 BLACK 컷씬 페이드와 AUTO_DELAYED / FADE_OUT 후처리가 실행되는지 관찰한다.",
+        "연출 종료 후 다음 대화 또는 이름 입력 UI로 정상 진행되는지 클릭하여 확인한다."
       ],
       "expectedResults": [
-        "플레이어가 의도하지 않게 바닥을 통과하지 않는다.",
-        "점프 결과와 충돌 상태를 확인할 수 있다."
+        "Skip 클릭 시 마지막 라인의 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 정상 수행된다.",
+        "대화 종료 후 클릭 입력이 차단되지 않고 다음 시퀀스로 정상 전환된다."
       ],
       "relatedIssueIds": [
-        "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247"
+        "issue-ff-010-dialogue-skip-cutscene"
       ],
       "priority": "High",
       "category": "재현 테스트",
       "platform": "Windows",
-      "status": "Draft",
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-21T08:09:37.249Z",
-      "updatedAt": "2026-10-21T08:14:59.688Z"
+      "createdAt": "2026-10-18T10:00:00.000Z",
+      "updatedAt": "2026-10-22T05:10:00.000Z"
     },
     {
-      "id": "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
+      "id": "tc-ff-010-02",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "점프 키 빠른 연속 입력 테스트",
-      "purpose": "짧은 시간 안에 반복 입력했을 때 비정상적인 이동이나 충돌이 발생하는지 확인한다.",
+      "title": "컷씬 FadeToBlack 연출 도중 Skip 연속 클릭 시 입력 잠금(isCutsceneFadingToBlack) 해제 검증",
+      "purpose": "검은 화면 페이드 코루틴 실행 도중 Skip을 빠르게 클릭했을 때 StopAllCoroutines()로 인해 입력 잠금 플래그가 고착되지 않는지 확인한다.",
       "preconditions": [
-        "Windows 데스크톱 빌드를 실행한다.",
-        "플레이어가 바닥 위에 있는지 확인한다."
+        "컷씬 페이드(BLACK) 연출이 포함된 대화 구간에 진입한다."
       ],
       "steps": [
-        "점프 입력을 빠르게 여러 번 반복한다.",
-        "플레이어의 위치와 바닥 충돌 상태를 관찰한다.",
-        "입력 종료 후 정상적으로 조작할 수 있는지 확인한다."
+        "대화 진행 중 화면이 검게 페이드 아웃되는 도중에 Skip 버튼과 대화창 클릭을 연속으로 입력한다.",
+        "마지막 라인 도달 후 마우스 좌클릭 또는 스페이스바로 다음 진행을 시도한다."
       ],
       "expectedResults": [
-        "입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.",
-        "입력 종료 후 게임이 정상적으로 반응한다."
+        "isCutsceneFadingToBlack 및 isCoverTransitioning 플래그가 false로 안전하게 복구되어 후속 클릭 입력이 차단되지 않는다."
       ],
       "relatedIssueIds": [
-        "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247"
-      ],
-      "priority": "Medium",
-      "category": "빠른 연속 입력",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "반복 입력 허용 여부와 점프 재사용 조건은 검증이 필요하다."
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-21T08:09:37.249Z",
-      "updatedAt": "2026-10-21T08:09:48.178Z"
-    },
-    {
-      "id": "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
-      "purpose": "프롤로그에서 설정한 플레이어 및 고양이 이름이 퍼즐 가방 UI의 회상 텍스트에 초기 임시값이 아닌 실제 입력값으로 올바르게 반영되는지 확인합니다.",
-      "preconditions": [
-        "게임이 정상 실행된 상태",
-        "프롤로그 진행 중 플레이어 및 고양이 이름을 입력하는 단계에 도달함 (검증 필요)"
-      ],
-      "steps": [
-        "프롤로그 진행 중 플레이어와 고양이 이름을 임의의 실제 이름으로 입력하고 완료합니다.",
-        "이후 퍼즐 가방 UI를 열어 회상 텍스트 항목을 선택합니다."
-      ],
-      "expectedResults": [
-        "회상 텍스트 내 플레이어 이름과 고양이 이름이 초기 임시값이 아니라 사용자가 입력한 실제 이름으로 표시됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
+        "issue-ff-010-dialogue-skip-cutscene"
       ],
       "priority": "High",
-      "category": "재현 테스트",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "프롤로그에서 플레이어와 고양이 이름을 입력하는 단계가 존재함",
-        "퍼즐 가방 UI를 통해 회상 텍스트를 확인할 수 있는 경로가 존재함"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
-    },
-    {
-      "id": "tc-d80438f3-9e48-4f6f-bd32-39d59e65c332",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "프롤로그 이름 변경 및 퍼즐 가방 UI 빠른 연속 진입 시 이름 치환 타이밍 검증",
-      "purpose": "이름 입력 직후나 퍼즐 가방 UI를 빠르게 반복해서 여닫을 때, PuzzleMemoryManager의 치환 타이밍 지연으로 인해 임시값이 노출되는지 확인합니다.",
-      "preconditions": [
-        "프롤로그 이름 입력 완료 직전 또는 직후 상태"
-      ],
-      "steps": [
-        "이름 입력 완료 후 곧바로 퍼즐 가방 UI를 마우스나 키보드로 빠르게 연속해서 열고 닫기를 반복합니다.",
-        "마지막으로 퍼즐 가방 UI를 연 상태로 유지하여 회상 텍스트를 확인합니다."
-      ],
-      "expectedResults": [
-        "빠른 연속 입력 및 UI 토글 상황에서도 회상 텍스트 내 이름이 임시값으로 롤백되지 않고 올바른 입력값으로 고정되어 표시됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
-      ],
-      "priority": "Medium",
       "category": "빠른 연속 입력",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "UI 열기/닫기 인터랙션이 빈번하게 발생할 때 비동기 로딩이나 초기화 타이밍 이슈가 발생할 수 있음"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
+      "createdAt": "2026-10-18T10:05:00.000Z",
+      "updatedAt": "2026-10-22T05:12:00.000Z"
     },
     {
-      "id": "tc-93c67452-b17d-4911-9501-c7063d01a378",
+      "id": "tc-ff-011-01",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "이름 글자 수 경계값(최소/최대) 입력 시 회상 텍스트 치환 검증",
-      "purpose": "플레이어 및 고양이 이름을 시스템에서 허용하는 최소 글자 수 또는 최대 글자 수로 설정했을 때, 회상 텍스트 치환 시 문자열 처리 오류나 깨짐 현상이 없는지 확인합니다.",
+      "title": "회상 퍼즐 진행 후 저장 및 이어하기(Load) 시 MemoryPuzzleStates 직렬화 복원 검증",
+      "purpose": "MemoryPuzzleStates(Dictionary<int, bool>)가 포함된 세이브 데이터를 저장하고 불러올 때 NullReferenceException 없이 회상 상태가 복원되는지 확인한다.",
       "preconditions": [
-        "이름 입력 UI 진입 상태"
+        "프롤로그 이후 회상 퍼즐을 1개 이상 완료하여 MemoryPuzzleStates에 데이터가 기록된 상태이다."
       ],
       "steps": [
-        "플레이어 및 고양이 이름을 허용된 최소 길이(예: 1자)로 입력하고 완료 후 퍼즐 가방 UI의 회상 텍스트를 확인합니다.",
-        "게임을 재시작하거나 초기화하여 최대 길이(예: 시스템 허용 최대 글자 수)로 이름을 입력하고 회상 텍스트를 확인합니다."
+        "현재 진행 상태를 세이브 슬롯에 저장하고 저장된 JSON의 MemoryPuzzleStates 필드 형식을 확인한다.",
+        "타이틀 화면으로 돌아가 [이어하기] 또는 해당 세이브 슬롯을 로드한다.",
+        "로드 완료 후 퍼즐 가방 UI 및 회상 완료 상태가 저장 전과 동일한지 확인한다."
       ],
       "expectedResults": [
-        "경계값 길이의 이름이 회상 텍스트 내에서 잘림이나 오탈자 없이 정상적으로 치환되어 출력됩니다."
+        "MemoryPuzzleStates가 클래스 문자열(ToString)이 아닌 유효한 JSON(dict:int-bool)으로 저장된다.",
+        "이어하기 로드 시 NullReferenceException 없이 이전 회상 선택 상태가 정확히 복원된다."
       ],
       "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
-      ],
-      "priority": "Low",
-      "category": "경계값",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "이름 입력에 대한 글자 수 제한(최소/최대 길이) 정책이 존재함"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
-    },
-    {
-      "id": "tc-31e22cdd-96ed-4f97-940d-1c02ade818db",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "게임 진행 중 이름 변경 이벤트 발생 시 회상 텍스트 실시간 반영 상태 전환 검증",
-      "purpose": "게임 내에서 이름이 변경되는 이벤트나 설정 변경 기능이 있을 때, 이미 로드되었거나 열려 있는 퍼즐 가방 UI의 회상 텍스트가 실시간으로 갱신되는지 확인합니다.",
-      "preconditions": [
-        "프롤로그 이후 게임 진행 중 이름 변경이 가능한 구간 또는 설정 메뉴 진입 가능 상태"
-      ],
-      "steps": [
-        "퍼즐 가방 UI를 열어둔 상태이거나 닫은 상태에서, 게임 내 이벤트나 설정을 통해 플레이어/고양이 이름을 새로운 값으로 변경합니다.",
-        "퍼즐 가방 UI를 다시 열거나 실시간으로 텍스트 영역을 주시하여 반영 여부를 확인합니다."
-      ],
-      "expectedResults": [
-        "이름 변경 직후 또는 UI 재진입 시 PuzzleMemoryManager가 변경된 이름을 즉시 감지하여 회상 텍스트에 올바르게 반영합니다."
-      ],
-      "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
-      ],
-      "priority": "Medium",
-      "category": "상태 전환",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "게임 플레이 도중 이름을 변경할 수 있는 기능이나 이벤트 트리거가 존재함"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
-    },
-    {
-      "id": "tc-9eb9aeaf-e7f4-4bb8-b3f6-60d63c2c8af5",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "이름 설정 및 회상 텍스트 활성화 후 세이브/로드 시 이름 유지 검증",
-      "purpose": "이름을 설정하고 회상 텍스트가 해금된 상태에서 게임을 저장하고 불러왔을 때, 세이브 데이터 내 이름 정보가 유실되지 않고 회상 텍스트에 정상 반영되는지 확인합니다.",
-      "preconditions": [
-        "프롤로그 이름 설정이 완료되고 퍼즐 가방 회상 텍스트가 1개 이상 활성화된 상태"
-      ],
-      "steps": [
-        "현재 시점에서 게임을 수동 또는 자동 저장합니다.",
-        "메인 메뉴로 이동하거나 게임을 종료 후 재시작하여 해당 세이브 파일을 불러옵니다.",
-        "퍼즐 가방 UI에 진입하여 회상 텍스트의 이름을 확인합니다."
-      ],
-      "expectedResults": [
-        "세이브 및 로드 이후에도 임시값이 아닌 저장된 실제 이름이 회상 텍스트에 정확하게 유지되어 표시됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
+        "issue-ff-011-save-load-dict-serialization"
       ],
       "priority": "High",
       "category": "저장 및 불러오기",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "플레이어 및 고양이 이름 데이터가 세이브 파일에 정상적으로 직렬화되어 저장됨"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
+      "createdAt": "2026-10-18T11:00:00.000Z",
+      "updatedAt": "2026-10-22T05:20:00.000Z"
     },
     {
-      "id": "tc-c35949a5-3a50-4348-a139-53ea9477450f",
+      "id": "tc-ff-011-02",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "게임 앱 완전 종료 후 재실행 시 회상 텍스트 이름 치환 유지 검증",
-      "purpose": "게임 프로세스를 완전히 종료한 뒤 재실행했을 때, PuzzleMemoryManager가 초기화 과정에서 이름 데이터를 올바르게 로드하여 회상 텍스트에 반영하는지 확인합니다.",
+      "title": "구버전 또는 손상된 MemoryPuzzleStates 문자열이 포함된 레거시 세이브 파일 로드 예외 방어 검증",
+      "purpose": "과거 빌드의 잘못된 문자열('System.Collections.Generic.Dictionary...')이 들어있는 세이브 파일을 로드할 때 크래시 없이 빈 Dictionary로 안전하게 복구되는지 확인한다.",
       "preconditions": [
-        "이름 설정 및 회상 텍스트 데이터가 포함된 세이브 파일이 존재함"
+        "MemoryPuzzleStates 값이 구버전 ToString() 문자열로 기록된 테스트용 세이브 파일이 준비되어 있다."
       ],
       "steps": [
-        "게임 클라이언트를 완전히 종료합니다(ALT+F4 또는 작업 관리자 종료 등).",
-        "게임을 재실행하고 저장된 세이브 데이터를 로드합니다.",
-        "퍼즐 가방 UI를 열어 회상 텍스트를 확인합니다."
+        "게임 실행 후 해당 레거시 세이브 파일을 로드한다.",
+        "게임 플레이 진입 여부와 초기화된 회상 퍼즐 상태를 확인한다."
       ],
       "expectedResults": [
-        "앱 재실행 후에도 임시값으로 회귀하지 않고 설정된 이름이 회상 텍스트에 정상적으로 출력됩니다."
+        "역직렬화 예외로 게임이 멈추지 않고 빈 Dictionary<int, bool>로 Fallback 처리되어 정상 진입한다."
       ],
       "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
+        "issue-ff-011-save-load-dict-serialization"
       ],
       "priority": "Medium",
-      "category": "재실행",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "게임 재실행 시 세이브 로드 메커니즘을 통해 이전 플레이 상태가 복원됨"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
-    },
-    {
-      "id": "tc-f5aae636-9d23-4c8a-83fd-4b45d5996381",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "Windows 데스크톱 환경 및 창 모드/포커스 전환 시 회상 텍스트 치환 검증",
-      "purpose": "Windows 운영체제 환경에서 창 모드/전체 화면 전환 또는 창 포커스 상실(Alt+Tab) 및 복귀 상황이 PuzzleMemoryManager의 텍스트 바인딩 및 UI 렌더링에 영향을 주지 않는지 확인합니다.",
-      "preconditions": [
-        "퍼즐 가방 UI가 열려 있고 회상 텍스트가 표시된 상태"
-      ],
-      "steps": [
-        "Alt+Enter를 눌러 창 모드와 전체 화면 모드를 상호 전환합니다.",
-        "Alt+Tab을 이용해 다른 응용프로그램으로 포커스를 잃게 한 뒤 다시 게임 창으로 복귀합니다.",
-        "퍼즐 가방 UI의 회상 텍스트 상태를 확인합니다."
-      ],
-      "expectedResults": [
-        "화면 모드 변경 및 포커스 상실·복귀 후에도 회상 텍스트의 이름 치환 상태가 깨지지 않고 정상적으로 유지됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-7f7c30db-964d-434d-8fb3-1af83361c785"
-      ],
-      "priority": "Low",
-      "category": "환경 호환성",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "Windows 창 포커스 변경 및 해상도/모드 전환이 Unity UI 매니저의 데이터 바인딩 타이밍에 직접적인 결함을 유발하지 않음"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T01:35:58.018Z",
-      "updatedAt": "2026-10-22T01:36:08.283Z"
-    },
-    {
-      "id": "tc-66954bf5-5cf2-48cf-ba14-69531640b209",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "설정 메뉴에서 사운드 음소거(Mute) 토글 시 오디오 출력 중단 재현 테스트",
-      "purpose": "옵션 또는 설정 UI에서 음소거 체크박스나 버튼을 활성화했을 때, 배경음악(BGM) 및 효과음(SFX) 등 모든 게임 사운드가 즉시 음소거되는지 확인합니다.",
-      "preconditions": [
-        "게임이 정상 실행 중이며 BGM 또는 SFX가 출력되고 있는 상태",
-        "설정(Options/Settings) 메뉴에 진입할 수 있는 상태"
-      ],
-      "steps": [
-        "설정 메뉴를 엽니다.",
-        "마우스 또는 키보드로 사운드 음소거 옵션을 클릭하여 체크/활성화합니다.",
-        "게임 플레이 화면으로 돌아와 사운드 출력 여부를 청각적으로 확인합니다."
-      ],
-      "expectedResults": [
-        "음소거 옵션 활성화 즉시 모든 게임 내 사운드(BGM, SFX 등)가 음소거되어 들리지 않아야 합니다."
-      ],
-      "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
-      ],
-      "priority": "High",
-      "category": "재현 테스트",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "게임 내에 사운드 설정을 조작할 수 있는 설정 UI 및 음소거 기능이 존재함",
-        "Unity AudioListener.pause 또는 개별 AudioSource/AudioMixer 음소거 제어 로직을 사용함"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
-    },
-    {
-      "id": "tc-5487e005-8be1-488b-9d17-278de7cb58cd",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "음소거 토글 버튼 빠른 연속 클릭 시 사운드 상태 전환 동기화 검증",
-      "purpose": "음소거 버튼을 마우스로 빠르게 연속해서 클릭할 때, 사운드 음소거 및 해제 상태가 오류 없이 올바르게 토글되는지 확인합니다.",
-      "preconditions": [
-        "설정 메뉴의 사운드 음소거 옵션 위치에 마우스 커서가 위치한 상태"
-      ],
-      "steps": [
-        "음소거 버튼을 짧은 간격으로 빠르게 5회 이상 연속 클릭합니다.",
-        "최종적으로 음소거가 설정된 상태 및 해제된 상태에서 각각 사운드 출력 여부를 확인합니다."
-      ],
-      "expectedResults": [
-        "빠른 연속 입력에도 입력 유실이나 오디오 매니저 간 상태 불일치가 발생하지 않으며, 최종 설정값에 맞게 사운드가 정확히 제어됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
-      ],
-      "priority": "Medium",
-      "category": "빠른 연속 입력",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "UI 버튼 이벤트 리스너에 입력 쿨다운이나 중복 방지 로직이 정상 적용되어 있음"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
-    },
-    {
-      "id": "tc-4400ca30-066e-4abe-9464-0ba69f8c1620",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "볼륨 슬라이더 최솟값(0)과 음소거 기능 간 경계값 동작 검증",
-      "purpose": "사운드 볼륨 슬라이더를 최솟값(0)으로 내렸을 때와 음소거 옵션을 체크했을 때의 내부 오디오 믹서 상태가 올바르게 연동되는지 확인합니다.",
-      "preconditions": [
-        "볼륨 조절 슬라이더와 음소거 옵션이 함께 존재하는 설정 화면 진입 상태"
-      ],
-      "steps": [
-        "볼륨 슬라이더를 마우스로 드래그하여 최솟값(0 혹은 -80dB)으로 설정한 뒤 사운드 출력을 확인합니다.",
-        "볼륨이 0이 아닌 상태에서 음소거 체크박스를 활성화하고 오디오 믹서의 출력 변화를 확인합니다."
-      ],
-      "expectedResults": [
-        "볼륨 최솟값 설정 및 음소거 설정 시 모두 사운드가 완벽히 차단되며, 음소거 해제 시 이전 볼륨 값으로 정상 복원됩니다."
-      ],
-      "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
-      ],
-      "priority": "Low",
       "category": "경계값",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "볼륨 슬라이더의 범위는 0(음소거/최소)에서 1(최대) 또는 이와 유사한 정규화된 값을 가짐"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
+      "createdAt": "2026-10-18T11:10:00.000Z",
+      "updatedAt": "2026-10-22T05:25:00.000Z"
     },
     {
-      "id": "tc-f170cb8c-04b6-431f-b20d-daaaf7f67181",
+      "id": "tc-ff-012-01",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "음소거 활성화 상태에서 오디오 트랙 재생 및 상태 전환 검증",
-      "purpose": "음소거가 켜진 상태에서 새로운 BGM이 재생되거나 새로운 효과음(SFX)이 발생할 때, 해당 오디오들이 즉시 음소거 상태로 재생되는지 확인합니다.",
+      "title": "동일 회상 퍼즐 재진입 및 Save/Load 반복 시 ResponsibilityScore 중복 누적 방지 검증",
+      "purpose": "이미 긍정 선택(true)으로 완료된 회상 퍼즐이 세이브/로드나 재진입으로 다시 평가될 때 책임감 점수가 중복 증가하지 않는지 확인한다.",
       "preconditions": [
-        "사운드 음소거 옵션이 활성화된 상태"
+        "1번 회상 퍼즐을 긍정 선택으로 완료하여 MemoryPuzzleStates[1] = true, ResponsibilityScore = 1인 상태이다."
       ],
       "steps": [
-        "음소거가 켜진 채로 스테이지 이동 또는 대화 진행 등을 통해 새로운 BGM이나 SFX가 트리거되는 상황을 만듭니다.",
-        "음소거 상태를 해제하여 직전 재생된 사운드가 백그라운드에서 정상 재생 중이었는지 확인합니다."
+        "게임을 저장한 뒤 다시 로드하여 동일 회상 선택 결과 갱신 이벤트(Result_MemoryChoiceUpdated)가 호출되는 경로를 수행한다.",
+        "ResponsibilityScore 수치와 책임감 게이지 UI 변화를 확인한다."
       ],
       "expectedResults": [
-        "음소거 중 새로 재생되는 오디오 소스들도 소리가 출력되지 않아야 하며, 음소거 해제 시 현재 시점에 맞는 사운드가 정상 들려야 합니다."
+        "MemoryPuzzleStates의 true 개수를 기준으로 점수가 재계산(Set)되어 ResponsibilityScore가 2로 중복 증가하지 않고 1로 유지된다."
       ],
       "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
-      ],
-      "priority": "Medium",
-      "category": "상태 전환",
-      "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "AudioMixer의 Expose된 파라미터 또는 AudioListener를 통해 전역 음소거가 제어됨"
-      ],
-      "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
-    },
-    {
-      "id": "tc-c629481d-abe1-4477-8330-d865e64bbded",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "음소거 설정 변경 후 게임 저장 및 불러오기 시 설정 유지 검증",
-      "purpose": "사운드 음소거 상태를 변경한 후 게임 데이터를 저장하고 다시 불러왔을 때, 음소거 설정 값이 세이브 파일에 올바르게 반영 및 유지되는지 확인합니다.",
-      "preconditions": [
-        "게임 내 수동 또는 자동 저장 기능 사용 가능 상태"
-      ],
-      "steps": [
-        "설정 메뉴에서 사운드 음소거를 활성화한 상태로 게임을 저장합니다.",
-        "메인 메뉴로 나가거나 게임을 재시작한 뒤 해당 세이브 파일을 불러옵니다.",
-        "설정 메뉴 및 인게임 사운드 출력 상태를 확인합니다."
-      ],
-      "expectedResults": [
-        "세이브 파일 로드 후에도 음소거 설정(Mute) 상태가 그대로 유지되며 사운드가 들리지 않아야 합니다."
-      ],
-      "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
+        "issue-ff-012-responsibility-score-ssot"
       ],
       "priority": "High",
       "category": "저장 및 불러오기",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "오디오 설정(음소거 및 볼륨)이 플레이어 개인 세이브 데이터 또는 별도의 환경 설정 파일(PlayerPrefs 등)에 저장됨"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
+      "createdAt": "2026-10-19T09:30:00.000Z",
+      "updatedAt": "2026-10-22T05:30:00.000Z"
     },
     {
-      "id": "tc-5f41841a-aa0d-4990-93b3-7c6786681f7e",
+      "id": "tc-ff-012-02",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "게임 앱 완전 종료 후 재실행 시 오디오 음소거 상태 유지 검증",
-      "purpose": "사운드를 음소거한 상태로 게임 클라이언트를 완전히 종료했다가 재실행했을 때, 초기화 과정에서 음소거 설정이 올바르게 적용되는지 확인합니다.",
+      "title": "회상 퍼즐 4종 순차 완료 시 ResponsibilityScore 및 엔딩/선택지 잠금 해금 정합성 검증",
+      "purpose": "각 스테이지 회상 퍼즐 완료 상태(true/false 조합)와 ResponsibilityScore 및 선택지 해금 조건이 1:1로 일치하는지 확인한다.",
       "preconditions": [
-        "사운드가 음소거된 상태"
+        "스테이지 1~4 회상 퍼즐 진입이 가능한 빌드 환경이다."
       ],
       "steps": [
-        "Alt+F4 등을 통해 게임 앱을 완전히 종료합니다.",
-        "게임을 다시 실행하여 타이틀 화면 및 인게임 진입 시의 사운드 출력 상태를 확인합니다."
+        "회상 퍼즐을 순서대로 진행하며 긍정(true) 3건, 부정(false) 1건을 선택한다.",
+        "최종 책임감 점수와 후반부 선택지 잠금 해제 여부 및 엔딩 분기 조건을 확인한다."
       ],
       "expectedResults": [
-        "앱 재실행 시에도 이전 설정된 음소거 상태가 유지되어 타이틀 화면부터 소리가 나지 않아야 합니다."
+        "ResponsibilityScore가 MemoryPuzzleStates 내 true 개수(3점)와 정확히 일치하며 의도한 분기가 해금된다."
       ],
       "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
+        "issue-ff-012-responsibility-score-ssot"
+      ],
+      "priority": "Medium",
+      "category": "상태 전환",
+      "platform": "Windows",
+      "status": "Ready",
+      "source": "external-ai",
+      "createdAt": "2026-10-19T09:40:00.000Z",
+      "updatedAt": "2026-10-22T05:35:00.000Z"
+    },
+    {
+      "id": "tc-ff-013-01",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "프롤로그 플레이어/고양이 이름 설정 후 퍼즐 가방 UI 회상 텍스트 동적 이름 치환 검증",
+      "purpose": "프롤로그에서 입력한 플레이어 이름과 고양이 이름이 퍼즐 가방 UI 회상 텍스트에 초기 임시값이 아닌 실제 입력값으로 표시되는지 확인한다.",
+      "preconditions": [
+        "새 게임을 시작하여 프롤로그 이름 입력 단계에 진입한다."
+      ],
+      "steps": [
+        "플레이어 이름('지은')과 고양이 이름('나비')을 기본값과 다른 이름으로 입력하고 프롤로그를 완료한다.",
+        "스테이지 진입 후 퍼즐 가방 UI를 열어 회상 텍스트의 이름 표기 부분을 확인한다."
+      ],
+      "expectedResults": [
+        "퍼즐 가방 UI를 여는 시점(UpdateHomePuzzleState)에 원문 memoryDictionary 기준으로 플레이스홀더가 치환되어 '지은', '나비'가 정확히 표시된다."
+      ],
+      "relatedIssueIds": [
+        "issue-ff-013-puzzle-memory-name-placeholder"
+      ],
+      "priority": "High",
+      "category": "재현 테스트",
+      "platform": "Windows",
+      "status": "Ready",
+      "source": "external-ai",
+      "createdAt": "2026-10-19T14:00:00.000Z",
+      "updatedAt": "2026-10-22T05:40:00.000Z"
+    },
+    {
+      "id": "tc-ff-013-02",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "게임 재실행 및 세이브 로드 후 퍼즐 가방 UI 재진입 시 설정된 이름 치환 유지 검증",
+      "purpose": "클라이언트를 종료 후 재실행하여 세이브 데이터를 불러왔을 때도 회상 텍스트 내 이름이 초기 임시값으로 회귀하지 않는지 확인한다.",
+      "preconditions": [
+        "사용자 지정 이름이 설정되고 회상 퍼즐이 해금된 세이브 파일이 존재한다."
+      ],
+      "steps": [
+        "게임 앱을 완전히 종료한 뒤 재실행한다.",
+        "세이브 파일을 로드한 직후 퍼즐 가방 UI를 열어 회상 텍스트를 확인한다."
+      ],
+      "expectedResults": [
+        "Awake() 시점의 임시 이름으로 고정되지 않고 로드된 세이브 데이터의 플레이어/고양이 이름으로 정상 출력된다."
+      ],
+      "relatedIssueIds": [
+        "issue-ff-013-puzzle-memory-name-placeholder"
       ],
       "priority": "Medium",
       "category": "재실행",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "설정 파일이 로컬 디스크(PlayerPrefs 또는 JSON 파일 등)에 정상적으로 기록됨"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
+      "createdAt": "2026-10-19T14:15:00.000Z",
+      "updatedAt": "2026-10-22T05:45:00.000Z"
     },
     {
-      "id": "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
+      "id": "tc-ff-014-01",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "Windows 창 포커스 상실(백그라운드 전환) 및 전체 화면 모드 변경 시 사운드 제어 검증",
-      "purpose": "Windows 환경에서 Alt+Tab으로 게임 창이 포커스를 잃거나 창 모드/전체 화면(Alt+Enter)을 전환할 때, 오디오 음소거 기능 및 시스템 오디오 처리(백그라운드 음소거 옵션 등)에 이상이 없는지 확인합니다.",
+      "title": "씬 전환 후 튜토리얼 노드 진행 시 ServiceCallAction 기반 싱글톤(SoundPlayer/UIManager/GameManager) 호출 검증",
+      "purpose": "타이틀 씬에서 스테이지 씬으로 전환한 뒤 진행되는 튜토리얼에서 DontDestroyOnLoad 매니저 서비스 호출이 참조 유실 없이 실행되는지 확인한다.",
       "preconditions": [
-        "게임이 Windows 데스크톱 환경에서 실행 중인 상태"
+        "타이틀 씬에서 게임을 시작하여 스테이지 1 튜토리얼 구간으로 씬 전환이 완료된 상태이다."
       ],
       "steps": [
-        "Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.",
-        "다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다."
+        "튜토리얼 노드를 순차 진행하며 SoundPlayer 효과음 재생, UIManager 패널 제어, GameManager 상태 변경 액션을 트리거한다.",
+        "콘솔 오류 여부 및 각 튜토리얼 연출의 실제 동작 결과를 확인한다."
       ],
       "expectedResults": [
-        "포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다."
+        "ServiceCallAction(ScriptableObject)이 런타임에 싱글톤 인스턴스를 정상 탐색하여 모든 튜토리얼 서비스 호출이 누락 없이 실행된다."
       ],
       "relatedIssueIds": [
-        "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd"
+        "issue-ff-014-tutorial-service-action-command"
+      ],
+      "priority": "High",
+      "category": "상태 전환",
+      "platform": "Windows",
+      "status": "Ready",
+      "source": "external-ai",
+      "createdAt": "2026-10-20T10:00:00.000Z",
+      "updatedAt": "2026-10-22T05:50:00.000Z"
+    },
+    {
+      "id": "tc-ff-015-01",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "Stage3 추격 시퀀스 마지막 NPC 자동 이동(NpcAutoMover) 시 발걸음 효과음 재생 검증",
+      "purpose": "Stage3 추격 구간 마지막 NPC 이동 연출에서 ObjectSfxController와의 AudioSource 간섭 없이 발걸음 효과음(walkSound)이 정상 출력되는지 확인한다.",
+      "preconditions": [
+        "Windows 데스크톱 빌드에서 Stage3 추격 이벤트 구간에 진입한다.",
+        "오디오 출력 장치 및 인게임 SFX 볼륨이 정상 활성화된 상태이다."
+      ],
+      "steps": [
+        "Stage3 추격전을 진행하여 마지막 NPC가 NpcAutoMover로 이동하는 연출을 시작시킨다.",
+        "NPC 이동 중 walkInterval 간격으로 발걸음 효과음이 출력되는지 확인한다."
+      ],
+      "expectedResults": [
+        "전용 AudioSource를 통해 walkSound가 환경음 페이드 제어에 의해 음소거되거나 끊기지 않고 명확히 재생된다."
+      ],
+      "relatedIssueIds": [
+        "issue-ff-015-stage3-npc-footstep-audio"
+      ],
+      "priority": "High",
+      "category": "재현 테스트",
+      "platform": "Windows",
+      "status": "Ready",
+      "source": "external-ai",
+      "createdAt": "2026-10-20T15:00:00.000Z",
+      "updatedAt": "2026-10-22T06:00:00.000Z"
+    },
+    {
+      "id": "tc-ff-016-01",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "반복 씬 전환 및 ChangeDualBGM 크로스페이드 수행 시 FMODSample 오디오 메모리 누수 및 재생 중단 검증",
+      "purpose": "씬 전환과 BGM 크로스페이드가 반복될 때 오디오 리소스가 정상 정리되어 FMODSample 메모리 할당 실패 없이 BGM이 지속 재생되는지 확인한다.",
+      "preconditions": [
+        "Windows 데스크톱 빌드를 실행한다.",
+        "스테이지 이동 및 회상 진입/퇴장 등 BGM 전환이 연속 발생하는 테스트 경로를 준비한다."
+      ],
+      "steps": [
+        "스테이지 씬 전환과 BGM 크로스페이드(ChangeDualBGM)가 발생하는 구간을 10회 이상 반복 수행한다.",
+        "페이드 인/아웃 도중 씬 전환을 발생시켜 코루틴 및 AudioSource 정리가 정상 수행되는지 확인한다.",
+        "BGM 출력 상태와 Player.log의 FMOD 오류 로그 유무를 확인한다."
+      ],
+      "expectedResults": [
+        "FMODSample 메모리 할당 실패(Out of Memory)가 발생하지 않으며 모든 씬 전환 후에도 BGM이 정상 재생된다."
+      ],
+      "relatedIssueIds": [
+        "issue-ff-016-bgm-crossfade-fmod-memory"
+      ],
+      "priority": "High",
+      "category": "재현 테스트",
+      "platform": "Windows",
+      "status": "Ready",
+      "source": "external-ai",
+      "createdAt": "2026-10-21T11:00:00.000Z",
+      "updatedAt": "2026-10-22T06:10:00.000Z"
+    },
+    {
+      "id": "tc-ff-016-02",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "Windows 창 포커스 전환(Alt+Tab) 및 해상도 변경 중 BGM 크로스페이드 안정성 검증",
+      "purpose": "BGM 크로스페이드 진행 중 창 포커스 상실·복귀가 발생할 때 오디오 채널 상태와 볼륨 페이드가 정상 유지되는지 확인한다.",
+      "preconditions": [
+        "Windows 11 데스크톱 환경(1920×1080)에서 BGM 전환 구간에 진입한다."
+      ],
+      "steps": [
+        "BGM 크로스페이드가 시작된 직후 Alt+Tab으로 창 포커스를 다른 앱으로 전환했다가 3초 후 복귀한다.",
+        "복귀 후 Dual BGM AudioSource의 볼륨 상태와 재생 여부를 확인한다."
+      ],
+      "expectedResults": [
+        "포커스 복귀 후 두 BGM 트랙이 동시에 겹쳐 재생되거나 무음 상태로 멈추지 않고 목표 BGM만 정상 볼륨으로 재생된다."
+      ],
+      "relatedIssueIds": [
+        "issue-ff-016-bgm-crossfade-fmod-memory"
       ],
       "priority": "Low",
       "category": "환경 호환성",
       "platform": "Windows",
-      "status": "Draft",
-      "assumptions": [
-        "Unity Run In Background 설정이 활성화되어 있으며, Windows 오디오 렌더링에 별도의 하드웨어 결함이 없음"
-      ],
+      "status": "Ready",
       "source": "external-ai",
-      "createdAt": "2026-10-22T04:07:08.748Z",
-      "updatedAt": "2026-10-22T04:07:18.458Z"
+      "createdAt": "2026-10-21T11:20:00.000Z",
+      "updatedAt": "2026-10-22T06:15:00.000Z"
     }
   ],
   "testRuns": [
     {
-      "id": "run-3d582d2a-f898-4415-8d5a-b6b5fdac1cdf",
+      "id": "run-ff-010-fail-101",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
-      "testCaseTitle": "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
-      "result": "PASS",
-      "executedAt": "2026-10-21T16:36:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "스테이지2에서 퍼즐 가방 UI 창 열었을 시, 플레이어 이름 정상적으로 치환되는 현상 확인 가능.",
-      "notes": "",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T01:37:10.479Z"
-    },
-    {
-      "id": "run-b46c65ea-d3cd-4846-b965-7b2b6db463cb",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-2fd4caa3-3b62-4507-9f2c-6e85e45c0728",
-      "testCaseTitle": "프롤로그 이름 설정 후 퍼즐 가방 UI 회상 텍스트 이름 치환 검증",
-      "result": "BLOCKED",
-      "executedAt": "2026-10-21T23:52:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "테스트",
-      "notes": "게임 종료 후 로드 했더니 먹히지 않았음",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T01:49:14.946Z"
-    },
-    {
-      "id": "run-7b2d81d5-e84e-4286-b865-575f93f210eb",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
-      "testCaseTitle": "점프 키 빠른 연속 입력 테스트",
+      "testCaseId": "tc-ff-010-01",
+      "testCaseTitle": "프롤로그(001_Prologue1) 대화 진행 중 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 자동진행 검증",
       "result": "FAIL",
-      "executedAt": "2026-10-22T01:52:00.000Z",
+      "executedAt": "2026-10-18T14:20:00.000Z",
       "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
+      "buildVersion": "Windows-2026.10.18",
+      "windowsEnvironment": "Windows 11 (23H2)",
       "resolution": "1920 × 1080",
-      "actualResult": "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
-      "notes": "점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T01:51:16.808Z"
+      "actualResult": "001_Prologue1 대화 도중 Skip 버튼 클릭 시 마지막 대사 텍스트만 즉시 표시되고, 마지막 라인에 지정된 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 실행되지 않아 화면이 멈춤.",
+      "notes": "SkipButtonClick() 호출 시 StopAllCoroutines()로 인해 진행 중이던 FadeToBlack() 코루틴이 중단되며 isCutsceneFadingToBlack = true가 그대로 남아 후속 클릭 입력까지 모두 차단됨.",
+      "nextNotes": "isSkippingToLast 도입 및 AfterLineFullyShownRoutine() 공통 후처리 분리 패치 후 1.0.2 빌드에서 회귀 검증 필요.",
+      "createdAt": "2026-10-18T14:25:00.000Z"
     },
     {
-      "id": "run-8fc39230-3d91-4d2d-ae34-9fbf2cc0078f",
+      "id": "run-ff-010-pass-102",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-5e6e67e3-5996-4437-95e1-b86a32073c5b",
-      "testCaseTitle": "플레이어 점프 시 바닥 통과 재현 테스트",
+      "testCaseId": "tc-ff-010-01",
+      "testCaseTitle": "프롤로그(001_Prologue1) 대화 진행 중 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 자동진행 검증",
       "result": "PASS",
-      "executedAt": "2026-10-21T18:51:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
+      "executedAt": "2026-10-22T02:10:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
       "resolution": "1920 × 1080",
-      "actualResult": "플레이어 점프 후 바닥에 무사히 착지함",
+      "actualResult": "001_Prologue1 진행 중 Skip 클릭 시 마지막 라인 BLACK 컷씬 즉시 반영 및 AfterLineFullyShownRoutine()을 통한 AUTO_DELAYED / FADE_OUT 자동 진행 정상 동작 확인.",
+      "notes": "이전 빌드(Windows-2026.10.18)에서 발생하던 마지막 라인 연출 누락 및 입력 먹통 현상 해결 확인.",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T02:12:00.000Z"
+    },
+    {
+      "id": "run-ff-010-02-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-010-02",
+      "testCaseTitle": "컷씬 FadeToBlack 연출 도중 Skip 연속 클릭 시 입력 잠금(isCutsceneFadingToBlack) 해제 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T02:18:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "FadeToBlack 페이드 진행 도중 Skip 연속 클릭 시에도 isCutsceneFadingToBlack = false 및 isCoverTransitioning = false 초기화가 정상 수행되어 다음 대사 클릭 진행이 정상 작동함.",
       "notes": "",
       "nextNotes": "",
-      "createdAt": "2026-10-22T03:51:50.614Z"
+      "createdAt": "2026-10-22T02:20:00.000Z"
     },
     {
-      "id": "run-a3b39cb3-d39c-4f01-8d80-a4a3c6d06a5d",
+      "id": "run-ff-011-fail-101",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-d80438f3-9e48-4f6f-bd32-39d59e65c332",
-      "testCaseTitle": "프롤로그 이름 변경 및 퍼즐 가방 UI 빠른 연속 진입 시 이름 치환 타이밍 검증",
-      "result": "PASS",
-      "executedAt": "2026-10-21T18:52:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "test 1",
-      "notes": "",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:52:33.006Z"
-    },
-    {
-      "id": "run-a50b5cd4-7fa0-4da4-9733-e2ee572bb492",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-93c67452-b17d-4911-9501-c7063d01a378",
-      "testCaseTitle": "이름 글자 수 경계값(최소/최대) 입력 시 회상 텍스트 치환 검증",
-      "result": "BLOCKED",
-      "executedAt": "2026-10-21T18:52:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "test 2",
-      "notes": "test 2",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:52:50.111Z"
-    },
-    {
-      "id": "run-48d496e9-c287-414f-86d5-2ed88cac3dde",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-31e22cdd-96ed-4f97-940d-1c02ade818db",
-      "testCaseTitle": "게임 진행 중 이름 변경 이벤트 발생 시 회상 텍스트 실시간 반영 상태 전환 검증",
-      "result": "PASS",
-      "executedAt": "2026-10-21T18:52:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "게임 진행 중에는 이름 변경을 하지 못하도록 하여 해당 테스트 케이스는 통과됨",
-      "notes": "",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:53:29.240Z"
-    },
-    {
-      "id": "run-a46f1f80-6c16-4def-be2a-9643223ecfb1",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-9eb9aeaf-e7f4-4bb8-b3f6-60d63c2c8af5",
-      "testCaseTitle": "이름 설정 및 회상 텍스트 활성화 후 세이브/로드 시 이름 유지 검증",
-      "result": "PASS",
-      "executedAt": "2026-10-21T18:53:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "유지됨",
-      "notes": "",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:53:53.993Z"
-    },
-    {
-      "id": "run-f4ca5856-047a-4471-acbc-dbcfc42fbde1",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-c35949a5-3a50-4348-a139-53ea9477450f",
-      "testCaseTitle": "게임 앱 완전 종료 후 재실행 시 회상 텍스트 이름 치환 유지 검증",
-      "result": "PASS",
-      "executedAt": "2026-10-21T18:54:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "잘 유지됨",
-      "notes": "",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:54:08.554Z"
-    },
-    {
-      "id": "run-f21eb6ef-44ad-494c-b829-53e2d617d52d",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-f5aae636-9d23-4c8a-83fd-4b45d5996381",
-      "testCaseTitle": "Windows 데스크톱 환경 및 창 모드/포커스 전환 시 회상 텍스트 치환 검증",
-      "result": "BLOCKED",
-      "executedAt": "2026-10-21T18:54:00.000Z",
-      "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
-      "resolution": "1920 × 1080",
-      "actualResult": "test 4",
-      "notes": "test 4  1111",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T03:54:28.538Z"
-    },
-    {
-      "id": "run-df97f5d6-1ab7-46ff-bcd2-fd23e6a90fff",
-      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "testCaseId": "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
-      "testCaseTitle": "Windows 창 포커스 상실(백그라운드 전환) 및 전체 화면 모드 변경 시 사운드 제어 검증",
+      "testCaseId": "tc-ff-011-01",
+      "testCaseTitle": "회상 퍼즐 진행 후 저장 및 이어하기(Load) 시 MemoryPuzzleStates 직렬화 복원 검증",
       "result": "FAIL",
-      "executedAt": "2026-10-21T19:07:00.000Z",
+      "executedAt": "2026-10-19T11:15:00.000Z",
+      "gameVersion": "1.0.1",
+      "buildVersion": "Windows-2026.10.18",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "회상 퍼즐 완료 후 세이브 파일을 이어하기로 불러올 때 SaveManager.ApplySavedGameData()에서 NullReferenceException이 발생하며 씬 로드가 중단됨.",
+      "notes": "세이브 JSON 확인 결과 MemoryPuzzleStates가 'System.Collections.Generic.Dictionary`2[System.Int32,System.Boolean]' 문자열로 잘못 직렬화되어 파싱이 불가능한 상태임을 확인.",
+      "nextNotes": "dict:int-bool 명시적 직렬화 분기 및 구버전 세이브 Fallback 처리 후 재검증 필요.",
+      "createdAt": "2026-10-19T11:20:00.000Z"
+    },
+    {
+      "id": "run-ff-011-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-011-01",
+      "testCaseTitle": "회상 퍼즐 진행 후 저장 및 이어하기(Load) 시 MemoryPuzzleStates 직렬화 복원 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T02:40:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "세이브 JSON 내 MemoryPuzzleStates가 dict:int-bool 타입의 JSON 문자열로 정상 기록되며, 이어하기 로드 시 예외 없이 모든 회상 퍼즐 해금 상태가 정확히 복원됨.",
+      "notes": "Atomic Write(.tmp -> .bak 교체) 동작 및 로드 무결성 함께 확인 완료.",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T02:42:00.000Z"
+    },
+    {
+      "id": "run-ff-011-02-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-011-02",
+      "testCaseTitle": "구버전 또는 손상된 MemoryPuzzleStates 문자열이 포함된 레거시 세이브 파일 로드 예외 방어 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T02:50:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "1.0.1 구버전 세이브 파일(ToString 문자열 포함) 로드 시 크래시 없이 빈 Dictionary<int, bool>로 안전하게 초기화되며 인게임 진입 성공.",
+      "notes": "",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T02:52:00.000Z"
+    },
+    {
+      "id": "run-ff-012-01-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-012-01",
+      "testCaseTitle": "동일 회상 퍼즐 재진입 및 Save/Load 반복 시 ResponsibilityScore 중복 누적 방지 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T03:10:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "세이브/로드 후 동일 회상 퍼즐 상태를 재갱신해도 MemoryPuzzleStates의 true 개수 기반으로 재계산되어 ResponsibilityScore가 중복 증가하지 않고 1로 정확히 유지됨.",
+      "notes": "",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T03:12:00.000Z"
+    },
+    {
+      "id": "run-ff-012-02-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-012-02",
+      "testCaseTitle": "회상 퍼즐 4종 순차 완료 시 ResponsibilityScore 및 엔딩/선택지 잠금 해금 정합성 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T03:25:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "회상 퍼즐 4종 중 긍정(true) 3건 선택 시 책임감 게이지 및 점수가 정확히 3으로 반영되고 후반부 선택지 잠금이 정상 해제됨.",
+      "notes": "",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T03:27:00.000Z"
+    },
+    {
+      "id": "run-ff-013-01-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-013-01",
+      "testCaseTitle": "프롤로그 플레이어/고양이 이름 설정 후 퍼즐 가방 UI 회상 텍스트 동적 이름 치환 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T03:40:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "프롤로그에서 입력한 플레이어 이름과 고양이 이름이 스테이지2 퍼즐 가방 UI 회상 텍스트에서 초기 임시값이 아닌 실제 입력 이름으로 정상 치환되어 출력됨.",
+      "notes": "memoryDictionary(원문)와 choiceTextDictionary(UI 표시용) 분리 및 UpdateHomePuzzleState() 호출 시점 치환 정상 동작 확인.",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T03:42:00.000Z"
+    },
+    {
+      "id": "run-ff-013-02-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-013-02",
+      "testCaseTitle": "게임 재실행 및 세이브 로드 후 퍼즐 가방 UI 재진입 시 설정된 이름 치환 유지 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T03:50:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "클라이언트 완전 종료 후 재실행하여 세이브 파일을 불러온 뒤에도 퍼즐 가방 UI의 회상 텍스트 내 이름이 사용자 설정 이름으로 정상 유지됨.",
+      "notes": "",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T03:52:00.000Z"
+    },
+    {
+      "id": "run-ff-014-01-pass-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-014-01",
+      "testCaseTitle": "씬 전환 후 튜토리얼 노드 진행 시 ServiceCallAction 기반 싱글톤(SoundPlayer/UIManager/GameManager) 호출 검증",
+      "result": "PASS",
+      "executedAt": "2026-10-22T04:10:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "타이틀에서 스테이지 씬으로 전환된 후 튜토리얼 노드 진행 시 ServiceCallAction을 통해 SoundPlayer, UIManager, GameManager 호출이 참조 유실 없이 모두 정상 실행됨.",
+      "notes": "",
+      "nextNotes": "",
+      "createdAt": "2026-10-22T04:12:00.000Z"
+    },
+    {
+      "id": "run-ff-015-fail-101",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-015-01",
+      "testCaseTitle": "Stage3 추격 시퀀스 마지막 NPC 자동 이동(NpcAutoMover) 시 발걸음 효과음 재생 검증",
+      "result": "FAIL",
+      "executedAt": "2026-10-21T16:45:00.000Z",
       "gameVersion": "1.0.1",
       "buildVersion": "Windows-2026.10.21",
-      "windowsEnvironment": "Windows 11",
+      "windowsEnvironment": "Windows 11 (23H2)",
       "resolution": "1920 × 1080",
-      "actualResult": "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
-      "notes": "Test 11",
-      "nextNotes": "",
-      "createdAt": "2026-10-22T04:08:36.099Z"
+      "actualResult": "Stage3 추격전 마지막 NPC가 NpcAutoMover에 의해 이동할 때 애니메이션과 이동은 정상 진행되나 발걸음 효과음(walkSound)이 전혀 들리지 않음.",
+      "notes": "NpcAutoMover와 ObjectSfxController가 동일 AudioSource를 참조하고 있어, ObjectSfxController의 환경음 페이드 아웃(volume = 0 / Stop)이 발걸음 PlayOneShot 출력을 함께 차단하는 현상 확인.",
+      "nextNotes": "NPC 발걸음 전용 AudioSource 분리 프리팹 적용 후 Stage3 후반부 세이브 포인트에서 재검증 예정.",
+      "createdAt": "2026-10-21T16:50:00.000Z"
+    },
+    {
+      "id": "run-ff-016-fail-101",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-016-01",
+      "testCaseTitle": "반복 씬 전환 및 ChangeDualBGM 크로스페이드 수행 시 FMODSample 오디오 메모리 누수 및 재생 중단 검증",
+      "result": "FAIL",
+      "executedAt": "2026-10-21T18:30:00.000Z",
+      "gameVersion": "1.0.1",
+      "buildVersion": "Windows-2026.10.21",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "스테이지 전환 및 회상 진입을 8회 반복하며 ChangeDualBGM() 크로스페이드를 연속 호출하던 중 FadeInCoroutine의 AudioSource.Play() 시점에 FMODSample 메모리 할당 실패 오류가 발생하며 BGM 출력이 중단됨.",
+      "notes": "Player.log에서 FMOD memory allocation failed 스택 트레이스 확인. 씬 전환 시 이전 페이드 코루틴과 AudioClip 참조가 즉시 해제되지 않고 누적됨.",
+      "nextNotes": "CleanupBeforeSceneLoad() 및 대용량 BGM Streaming/Vorbis 설정 적용 빌드에서 15회 이상 반복 회귀 테스트 예정.",
+      "createdAt": "2026-10-21T18:35:00.000Z"
+    },
+    {
+      "id": "run-ff-016-02-blocked-102",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "testCaseId": "tc-ff-016-02",
+      "testCaseTitle": "Windows 창 포커스 전환(Alt+Tab) 및 해상도 변경 중 BGM 크로스페이드 안정성 검증",
+      "result": "BLOCKED",
+      "executedAt": "2026-10-22T04:30:00.000Z",
+      "gameVersion": "1.0.2",
+      "buildVersion": "Windows-2026.10.22",
+      "windowsEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "actualResult": "ISSUE-016 오디오 메모리 해제 패치(tc-ff-016-01)의 장시간 스트레스 검증이 선행되어야 하여 창 포커스 전환 결합 테스트는 일시 보류함.",
+      "notes": "Dual BGM Streaming 에셋 재임포트가 반영된 신규 빌드 패키징 직후 실행 예정.",
+      "nextNotes": "tc-ff-016-01 통과 확인 후 즉시 이어서 실행.",
+      "createdAt": "2026-10-22T04:32:00.000Z"
     }
   ],
   "bugReports": [
     {
-      "id": "bug-fb7cbdfb-804f-4770-9048-fc86020139f1",
+      "id": "bug-ff-010-skip-cutscene",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "[BUG] 연속 점프 입력 불가능",
-      "status": "Draft",
-      "severity": "Major",
-      "priority": "Medium",
-      "relatedIssueId": "issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247",
-      "testCaseId": "tc-4515929c-16c7-4b8f-aa33-6496726d35cb",
-      "testRunId": "run-7b2d81d5-e84e-4286-b865-575f93f210eb",
+      "title": "[BUG] 대화 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 AUTO_DELAYED 자동진행 누락",
+      "status": "Retest Passed",
+      "severity": "Critical",
+      "priority": "High",
+      "relatedIssueId": "issue-ff-010-dialogue-skip-cutscene",
+      "testCaseId": "tc-ff-010-01",
+      "testRunId": "run-ff-010-fail-101",
       "gameVersion": "1.0.1",
-      "buildVersion": "Windows-2026.10.21",
-      "platform": "",
-      "runtimeEnvironment": "Windows 11",
+      "buildVersion": "Windows-2026.10.18",
+      "platform": "Windows",
+      "runtimeEnvironment": "Windows 11 (23H2)",
       "resolution": "1920 × 1080",
-      "frequency": "5회 중 3회",
-      "preconditions": "Windows 데스크톱 빌드를 실행한다.\n플레이어가 바닥 위에 있는지 확인한다.",
-      "reproductionSteps": "1. 점프 입력을 빠르게 여러 번 반복한다.\n2. 플레이어의 위치와 바닥 충돌 상태를 관찰한다.\n3. 입력 종료 후 정상적으로 조작할 수 있는지 확인한다.",
-      "expectedResult": "입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.\n입력 종료 후 게임이 정상적으로 반응한다.",
-      "actualResult": "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
-      "confirmedFacts": "점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음",
-      "suspectedCause": "점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.",
-      "evidenceNotes": "bool isDoubleJump = true; 이후 \nisDoubleJump = false; 로 초기화의 코드가 없음.",
-      "createdAt": "2026-10-22T02:30:33.226Z",
-      "updatedAt": "2026-10-22T02:31:51.314Z"
+      "frequency": "항상 재현 (5회 중 5회)",
+      "preconditions": "Windows 데스크톱 빌드(1920×1080)를 실행한다.\n새 게임을 시작하여 001_Prologue1 대화 시퀀스에 진입한다.",
+      "reproductionSteps": "1. 대화 타이핑이 진행 중일 때 우측 상단 Skip 버튼을 클릭한다.\n2. 마지막 라인 대사가 즉시 완성된 후 BLACK 컷씬 페이드와 AUTO_DELAYED / FADE_OUT 후처리가 실행되는지 관찰한다.\n3. 연출 종료 후 다음 대화 또는 이름 입력 UI로 정상 진행되는지 클릭하여 확인한다.",
+      "expectedResult": "Skip 클릭 시 마지막 라인의 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 정상 수행된다.\n대화 종료 후 클릭 입력이 차단되지 않고 다음 시퀀스로 정상 전환된다.",
+      "actualResult": "001_Prologue1 대화 도중 Skip 버튼 클릭 시 마지막 대사 텍스트만 즉시 표시되고, 마지막 라인에 지정된 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 실행되지 않아 화면이 멈춤.",
+      "confirmedFacts": "1. Skip 클릭 시 마지막 대사 텍스트는 즉시 출력되나 BLACK 화면 전환과 AUTO_DELAYED 자동 진행이 동작하지 않음.\n2. FadeToBlack() 진행 중 Skip 클릭 시 이후 마우스 클릭 입력이 전혀 먹히지 않음.",
+      "suspectedCause": "SkipButtonClick()에서 StopAllCoroutines() 호출 시 진행 중이던 FadeToBlack() 코루틴이 중단되면서 isCutsceneFadingToBlack = false 복구 코드가 실행되지 않고, 일반 대사 완료 후처리(TypeSentence 말미의 AUTO_DELAYED / FADE_OUT 로직)를 우회함.",
+      "evidenceNotes": "DialogueManager.SkipButtonClick() 및 FadeToBlack() 코루틴 상태 플래그 점검. 1.0.2 빌드(Windows-2026.10.22)에서 isSkippingToLast 및 AfterLineFullyShownRoutine() 적용 후 회귀 테스트(run-ff-010-pass-102) PASS 확인 완료.",
+      "createdAt": "2026-10-18T14:40:00.000Z",
+      "updatedAt": "2026-10-22T02:15:00.000Z"
     },
     {
-      "id": "bug-d5608949-cb2d-42c3-ac60-3669ea84473e",
+      "id": "bug-ff-011-save-dict-nullref",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "title": "[BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능",
-      "status": "Draft",
-      "severity": "Minor",
-      "priority": "Low",
-      "relatedIssueId": "issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd",
-      "testCaseId": "tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce",
-      "testRunId": "run-df97f5d6-1ab7-46ff-bcd2-fd23e6a90fff",
+      "title": "[BUG] MemoryPuzzleStates Dictionary 직렬화 오류로 인한 이어하기 Load 실패 (NullReferenceException)",
+      "status": "Retest Passed",
+      "severity": "Critical",
+      "priority": "High",
+      "relatedIssueId": "issue-ff-011-save-load-dict-serialization",
+      "testCaseId": "tc-ff-011-01",
+      "testRunId": "run-ff-011-fail-101",
+      "gameVersion": "1.0.1",
+      "buildVersion": "Windows-2026.10.18",
+      "platform": "Windows",
+      "runtimeEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "frequency": "항상 재현",
+      "preconditions": "프롤로그 이후 회상 퍼즐을 1개 이상 완료하여 MemoryPuzzleStates에 데이터가 기록된 상태이다.",
+      "reproductionSteps": "1. 현재 진행 상태를 세이브 슬롯에 저장하고 저장된 JSON의 MemoryPuzzleStates 필드 형식을 확인한다.\n2. 타이틀 화면으로 돌아가 [이어하기] 또는 해당 세이브 슬롯을 로드한다.\n3. 로드 완료 후 퍼즐 가방 UI 및 회상 완료 상태가 저장 전과 동일한지 확인한다.",
+      "expectedResult": "MemoryPuzzleStates가 클래스 문자열(ToString)이 아닌 유효한 JSON(dict:int-bool)으로 저장된다.\n이어하기 로드 시 NullReferenceException 없이 이전 회상 선택 상태가 정확히 복원된다.",
+      "actualResult": "회상 퍼즐 완료 후 세이브 파일을 이어하기로 불러올 때 SaveManager.ApplySavedGameData()에서 NullReferenceException이 발생하며 씬 로드가 중단됨.",
+      "confirmedFacts": "세이브 JSON 파일 내 MemoryPuzzleStates 항목의 type이 'string', value가 'System.Collections.Generic.Dictionary`2[System.Int32,System.Boolean]'으로 기록되어 있음.",
+      "suspectedCause": "SaveData 직렬화/역직렬화 분기에서 Dictionary<int, bool> 타입 처리가 누락되어 기본 object.ToString() 결과가 저장된 것으로 확인됨.",
+      "evidenceNotes": "SaveData.ToJson() 및 SaveManager.ApplySavedGameData() 수정(dict:int-bool 분기 추가 및 구버전 세이브 Fallback 방어 코드 적용). 1.0.2 빌드(run-ff-011-pass-102)에서 회귀 검증 완료.",
+      "createdAt": "2026-10-19T11:30:00.000Z",
+      "updatedAt": "2026-10-22T02:45:00.000Z"
+    },
+    {
+      "id": "bug-ff-015-stage3-npc-footstep",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "[BUG] Stage3 추격 구간 마지막 NPC 이동 연출 시 발걸음 효과음(walkSound) 미재생",
+      "status": "Fixing",
+      "severity": "Major",
+      "priority": "Medium",
+      "relatedIssueId": "issue-ff-015-stage3-npc-footstep-audio",
+      "testCaseId": "tc-ff-015-01",
+      "testRunId": "run-ff-015-fail-101",
       "gameVersion": "1.0.1",
       "buildVersion": "Windows-2026.10.21",
-      "platform": "Desktop",
-      "runtimeEnvironment": "Windows 11",
+      "platform": "Windows",
+      "runtimeEnvironment": "Windows 11 (23H2)",
       "resolution": "1920 × 1080",
-      "frequency": "",
-      "preconditions": "게임이 Windows 데스크톱 환경에서 실행 중인 상태",
-      "reproductionSteps": "1. Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.\n2. 다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다.",
-      "expectedResult": "포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다.",
-      "actualResult": "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
-      "confirmedFacts": "일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨",
-      "suspectedCause": "원인 미확인",
-      "evidenceNotes": "Test 11",
-      "createdAt": "2026-10-22T04:09:45.626Z",
-      "updatedAt": "2026-10-22T04:09:45.626Z"
+      "frequency": "항상 재현",
+      "preconditions": "Windows 데스크톱 빌드에서 Stage3 추격 이벤트 구간에 진입한다.\n오디오 출력 장치 및 인게임 SFX 볼륨이 정상 활성화된 상태이다.",
+      "reproductionSteps": "1. Stage3 추격전을 진행하여 마지막 NPC가 NpcAutoMover로 이동하는 연출을 시작시킨다.\n2. NPC 이동 중 walkInterval 간격으로 발걸음 효과음이 출력되는지 확인한다.",
+      "expectedResult": "전용 AudioSource를 통해 walkSound가 환경음 페이드 제어에 의해 음소거되거나 끊기지 않고 명확히 재생된다.",
+      "actualResult": "Stage3 추격전 마지막 NPC가 NpcAutoMover에 의해 이동할 때 애니메이션과 이동은 정상 진행되나 발걸음 효과음(walkSound)이 전혀 들리지 않음.",
+      "confirmedFacts": "NpcAutoMover의 이동 루프에서 walkInterval마다 PlayOneShot(walkSound) 호출 조건은 충족되나 실제 오디오 출력이 0으로 차단됨.",
+      "suspectedCause": "동일 NPC 오브젝트의 ObjectSfxController(환경음 페이드/정지 제어)와 NpcAutoMover가 동일한 AudioSource를 공유하여 볼륨 감쇠 및 Stop() 간섭이 발생함.",
+      "evidenceNotes": "NPC 프리팹에 발걸음 전용 AudioSource를 분리 추가하고 NpcAutoMover 참조를 분리하는 패치 반영 완료. Stage3 후반부 빌드 재검증 대기 중.",
+      "createdAt": "2026-10-21T17:00:00.000Z",
+      "updatedAt": "2026-10-22T04:00:00.000Z"
+    },
+    {
+      "id": "bug-ff-016-fmod-bgm-memory",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "title": "[BUG] 반복 씬 전환 및 Dual BGM 크로스페이드 시 FMODSample 오디오 메모리 할당 실패",
+      "status": "Reported",
+      "severity": "Critical",
+      "priority": "High",
+      "relatedIssueId": "issue-ff-016-bgm-crossfade-fmod-memory",
+      "testCaseId": "tc-ff-016-01",
+      "testRunId": "run-ff-016-fail-101",
+      "gameVersion": "1.0.1",
+      "buildVersion": "Windows-2026.10.21",
+      "platform": "Windows",
+      "runtimeEnvironment": "Windows 11 (23H2)",
+      "resolution": "1920 × 1080",
+      "frequency": "8~10회 연속 씬/BGM 전환 시 재현",
+      "preconditions": "Windows 데스크톱 빌드를 실행한다.\n스테이지 이동 및 회상 진입/퇴장 등 BGM 전환이 연속 발생하는 테스트 경로를 준비한다.",
+      "reproductionSteps": "1. 스테이지 씬 전환과 BGM 크로스페이드(ChangeDualBGM)가 발생하는 구간을 10회 이상 반복 수행한다.\n2. 페이드 인/아웃 도중 씬 전환을 발생시켜 코루틴 및 AudioSource 정리가 정상 수행되는지 확인한다.\n3. BGM 출력 상태와 Player.log의 FMOD 오류 로그 유무를 확인한다.",
+      "expectedResult": "FMODSample 메모리 할당 실패(Out of Memory)가 발생하지 않으며 모든 씬 전환 후에도 BGM이 정상 재생된다.",
+      "actualResult": "스테이지 전환 및 회상 진입을 8회 반복하며 ChangeDualBGM() 크로스페이드를 연속 호출하던 중 FadeInCoroutine의 AudioSource.Play() 시점에 FMODSample 메모리 할당 실패 오류가 발생하며 BGM 출력이 중단됨.",
+      "confirmedFacts": "SoundPlayer.ChangeDualBGM() -> FadeInCoroutine() -> AudioSource.Play() 호출 경로에서 FMODSample 메모리 부족 오류 발생 확인.",
+      "suspectedCause": "씬 전환 시 이전 BGM 페이드 코루틴과 AudioSource.clip 참조 및 대용량 PCM 오디오 버퍼가 해제되지 않고 누적된 것으로 분석됨.",
+      "evidenceNotes": "SoundPlayer.CleanupBeforeSceneLoad()에서 StopAllBGMCoroutines() 및 clip = null 해제 추가, BGM 오디오 클립 Load Type을 Streaming(Vorbis, Preload 해제)으로 변경 후 회귀 테스트 진행 예정.",
+      "createdAt": "2026-10-21T18:50:00.000Z",
+      "updatedAt": "2026-10-22T04:20:00.000Z"
     }
   ],
   "mailDrafts": [
     {
-      "id": "mail-draft-53f774b9-7b1a-4877-9092-04cbb3c7a27d",
+      "id": "mail-draft-ff-010",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "bugReportId": "bug-fb7cbdfb-804f-4770-9048-fc86020139f1",
-      "recipient": "qa-dev@example.com",
-      "subject": "[수정 요청] [BUG] 연속 점프 입력 불가능",
-      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 연속 점프 입력 불가능\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: 미기재 · 실행 환경: Windows 11 · 해상도: 1920 × 1080\n발생 빈도: 5회 중 3회\n\n재현 절차:\n1. 점프 입력을 빠르게 여러 번 반복한다.\n2. 플레이어의 위치와 바닥 충돌 상태를 관찰한다.\n3. 입력 종료 후 정상적으로 조작할 수 있는지 확인한다.\n\n기대 결과: 입력 반복으로 인해 플레이어가 비정상적으로 바닥을 통과하지 않는다.\n입력 종료 후 게임이 정상적으로 반응한다.\n실제 결과: 점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음\n심각도: Major · 우선순위: Medium\n관련 테스트 케이스: tc-4515929c-16c7-4b8f-aa33-6496726d35cb · 관련 이슈: issue-2f1fd49e-ce6b-417d-a4cd-585cdd37c247\n첨부 증거 또는 추가 확인 사항: bool isDoubleJump = true; 이후 \nisDoubleJump = false; 로 초기화의 코드가 없음.\n확인된 사실: 점프 키 빠르게 연속 입력했을 때 처음에는 가능했지만, 2~3번째에는 먹히지 않았음\n원인: 추정(미검증) — 점프키 입력 관련 변수가 지면에 닿은 이후에는 초기화되지 않은 것으로 추정됨.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
-      "updatedAt": "2026-10-22T02:57:42.864Z"
+      "bugReportId": "bug-ff-010-skip-cutscene",
+      "recipient": "client-dev@fourfootsteps.team",
+      "subject": "[수정 요청] [BUG] 대화 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 AUTO_DELAYED 자동진행 누락",
+      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 대화 Skip 클릭 시 마지막 라인 BLACK 컷씬 및 AUTO_DELAYED 자동진행 누락\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.18\n플랫폼: Windows · 실행 환경: Windows 11 (23H2) · 해상도: 1920 × 1080\n발생 빈도: 항상 재현 (5회 중 5회)\n\n재현 절차:\n1. 대화 타이핑이 진행 중일 때 우측 상단 Skip 버튼을 클릭한다.\n2. 마지막 라인 대사가 즉시 완성된 후 BLACK 컷씬 페이드와 AUTO_DELAYED / FADE_OUT 후처리가 실행되는지 관찰한다.\n3. 연출 종료 후 다음 대화 또는 이름 입력 UI로 정상 진행되는지 클릭하여 확인한다.\n\n기대 결과: Skip 클릭 시 마지막 라인의 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 정상 수행된다.\n대화 종료 후 클릭 입력이 차단되지 않고 다음 시퀀스로 정상 전환된다.\n실제 결과: 001_Prologue1 대화 도중 Skip 버튼 클릭 시 마지막 대사 텍스트만 즉시 표시되고, 마지막 라인에 지정된 BLACK 컷씬 전환과 AUTO_DELAYED 자동 진행이 실행되지 않아 화면이 멈춤.\n심각도: Critical · 우선순위: High\n관련 테스트 케이스: tc-ff-010-01 · 관련 이슈: issue-ff-010-dialogue-skip-cutscene\n첨부 증거 또는 추가 확인 사항: DialogueManager.SkipButtonClick() 및 FadeToBlack() 코루틴 상태 플래그 점검. 1.0.2 빌드(Windows-2026.10.22)에서 isSkippingToLast 및 AfterLineFullyShownRoutine() 적용 후 회귀 테스트(run-ff-010-pass-102) PASS 확인 완료.\n확인된 사실: 1. Skip 클릭 시 마지막 대사 텍스트는 즉시 출력되나 BLACK 화면 전환과 AUTO_DELAYED 자동 진행이 동작하지 않음.\n2. FadeToBlack() 진행 중 Skip 클릭 시 이후 마우스 클릭 입력이 전혀 먹히지 않음.\n원인: 추정(미검증) — SkipButtonClick()에서 StopAllCoroutines() 호출 시 진행 중이던 FadeToBlack() 코루틴이 중단되면서 isCutsceneFadingToBlack = false 복구 코드가 실행되지 않고, 일반 대사 완료 후처리(TypeSentence 말미의 AUTO_DELAYED / FADE_OUT 로직)를 우회함.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+      "updatedAt": "2026-10-18T14:50:00.000Z"
     },
     {
-      "id": "mail-draft-91bc2186-0255-459c-969a-76c8348a4db5",
+      "id": "mail-draft-ff-011",
       "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
-      "bugReportId": "bug-d5608949-cb2d-42c3-ac60-3669ea84473e",
-      "recipient": "",
-      "subject": "[수정 요청] [BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능",
-      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 일반 효과음 재생 중 백그라운드 전환 시 제어 불가능\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: Desktop · 실행 환경: Windows 11 · 해상도: 1920 × 1080\n발생 빈도: 미기재\n\n재현 절차:\n1. Alt+Tab을 눌러 다른 프로그램으로 포커스를 이동시킨 뒤 게임 내 사운드(백그라운드 재생 여부)를 확인합니다.\n2. 다시 게임 창으로 포커스를 복귀시키고, Alt+Enter를 눌러 전체 화면과 창 모드를 전환하며 사운드 출력 상태를 확인합니다.\n\n기대 결과: 포커스 상실 및 화면 모드 전환 시 예기치 않은 사운드 강제 음소거 해제나 오디오 디바이스 크래시가 발생하지 않고 설정된 음소거 상태가 안정적으로 유지됩니다.\n실제 결과: 일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨\n심각도: Minor · 우선순위: Low\n관련 테스트 케이스: tc-1ef03ea2-8e7d-4715-81e6-0164b2d684ce · 관련 이슈: issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd, issue-2316aaa0-27bb-44c4-b9c5-b368fe7fc1bd\n첨부 증거 또는 추가 확인 사항: Test 11\n확인된 사실: 일반 효과음 재생 중 백그라운드 전환 후에도 기획 의도와 달리 계속 효과음이 재생됨\n원인: 원인 미확인\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
-      "updatedAt": "2026-10-22T04:09:57.283Z"
+      "bugReportId": "bug-ff-011-save-dict-nullref",
+      "recipient": "client-dev@fourfootsteps.team",
+      "subject": "[수정 요청] [BUG] MemoryPuzzleStates Dictionary 직렬화 오류로 인한 이어하기 Load 실패 (NullReferenceException)",
+      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] MemoryPuzzleStates Dictionary 직렬화 오류로 인한 이어하기 Load 실패 (NullReferenceException)\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.18\n플랫폼: Windows · 실행 환경: Windows 11 (23H2) · 해상도: 1920 × 1080\n발생 빈도: 항상 재현\n\n재현 절차:\n1. 현재 진행 상태를 세이브 슬롯에 저장하고 저장된 JSON의 MemoryPuzzleStates 필드 형식을 확인한다.\n2. 타이틀 화면으로 돌아가 [이어하기] 또는 해당 세이브 슬롯을 로드한다.\n3. 로드 완료 후 퍼즐 가방 UI 및 회상 완료 상태가 저장 전과 동일한지 확인한다.\n\n기대 결과: MemoryPuzzleStates가 클래스 문자열(ToString)이 아닌 유효한 JSON(dict:int-bool)으로 저장된다.\n이어하기 로드 시 NullReferenceException 없이 이전 회상 선택 상태가 정확히 복원된다.\n실제 결과: 회상 퍼즐 완료 후 세이브 파일을 이어하기로 불러올 때 SaveManager.ApplySavedGameData()에서 NullReferenceException이 발생하며 씬 로드가 중단됨.\n심각도: Critical · 우선순위: High\n관련 테스트 케이스: tc-ff-011-01 · 관련 이슈: issue-ff-011-save-load-dict-serialization\n첨부 증거 또는 추가 확인 사항: SaveData.ToJson() 및 SaveManager.ApplySavedGameData() 수정(dict:int-bool 분기 추가 및 구버전 세이브 Fallback 방어 코드 적용). 1.0.2 빌드(run-ff-011-pass-102)에서 회귀 검증 완료.\n확인된 사실: 세이브 JSON 파일 내 MemoryPuzzleStates 항목의 type이 'string', value가 'System.Collections.Generic.Dictionary`2[System.Int32,System.Boolean]'으로 기록되어 있음.\n원인: 추정(미검증) — SaveData 직렬화/역직렬화 분기에서 Dictionary<int, bool> 타입 처리가 누락되어 기본 object.ToString() 결과가 저장된 것으로 확인됨.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+      "updatedAt": "2026-10-19T11:40:00.000Z"
+    },
+    {
+      "id": "mail-draft-ff-015",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "bugReportId": "bug-ff-015-stage3-npc-footstep",
+      "recipient": "client-dev@fourfootsteps.team",
+      "subject": "[수정 요청] [BUG] Stage3 추격 구간 마지막 NPC 이동 연출 시 발걸음 효과음(walkSound) 미재생",
+      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] Stage3 추격 구간 마지막 NPC 이동 연출 시 발걸음 효과음(walkSound) 미재생\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: Windows · 실행 환경: Windows 11 (23H2) · 해상도: 1920 × 1080\n발생 빈도: 항상 재현\n\n재현 절차:\n1. Stage3 추격전을 진행하여 마지막 NPC가 NpcAutoMover로 이동하는 연출을 시작시킨다.\n2. NPC 이동 중 walkInterval 간격으로 발걸음 효과음이 출력되는지 확인한다.\n\n기대 결과: 전용 AudioSource를 통해 walkSound가 환경음 페이드 제어에 의해 음소거되거나 끊기지 않고 명확히 재생된다.\n실제 결과: Stage3 추격전 마지막 NPC가 NpcAutoMover에 의해 이동할 때 애니메이션과 이동은 정상 진행되나 발걸음 효과음(walkSound)이 전혀 들리지 않음.\n심각도: Major · 우선순위: Medium\n관련 테스트 케이스: tc-ff-015-01 · 관련 이슈: issue-ff-015-stage3-npc-footstep-audio\n첨부 증거 또는 추가 확인 사항: NPC 프리팹에 발걸음 전용 AudioSource를 분리 추가하고 NpcAutoMover 참조를 분리하는 패치 반영 완료. Stage3 후반부 빌드 재검증 대기 중.\n확인된 사실: NpcAutoMover의 이동 루프에서 walkInterval마다 PlayOneShot(walkSound) 호출 조건은 충족되나 실제 오디오 출력이 0으로 차단됨.\n원인: 추정(미검증) — 동일 NPC 오브젝트의 ObjectSfxController(환경음 페이드/정지 제어)와 NpcAutoMover가 동일한 AudioSource를 공유하여 볼륨 감쇠 및 Stop() 간섭이 발생함.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+      "updatedAt": "2026-10-21T17:10:00.000Z"
+    },
+    {
+      "id": "mail-draft-ff-016",
+      "projectId": "project-1edd2474-ee3d-4010-9ef9-096d3a3fc99b",
+      "bugReportId": "bug-ff-016-fmod-bgm-memory",
+      "recipient": "client-dev@fourfootsteps.team",
+      "subject": "[수정 요청] [BUG] 반복 씬 전환 및 Dual BGM 크로스페이드 시 FMODSample 오디오 메모리 할당 실패",
+      "body": "안녕하세요,\n\n아래 버그에 대해 확인 및 수정을 요청드립니다.\n\n버그 발생 요약: [BUG] 반복 씬 전환 및 Dual BGM 크로스페이드 시 FMODSample 오디오 메모리 할당 실패\n게임 버전: 1.0.1 · 빌드 버전: Windows-2026.10.21\n플랫폼: Windows · 실행 환경: Windows 11 (23H2) · 해상도: 1920 × 1080\n발생 빈도: 8~10회 연속 씬/BGM 전환 시 재현\n\n재현 절차:\n1. 스테이지 씬 전환과 BGM 크로스페이드(ChangeDualBGM)가 발생하는 구간을 10회 이상 반복 수행한다.\n2. 페이드 인/아웃 도중 씬 전환을 발생시켜 코루틴 및 AudioSource 정리가 정상 수행되는지 확인한다.\n3. BGM 출력 상태와 Player.log의 FMOD 오류 로그 유무를 확인한다.\n\n기대 결과: FMODSample 메모리 할당 실패(Out of Memory)가 발생하지 않으며 모든 씬 전환 후에도 BGM이 정상 재생된다.\n실제 결과: 스테이지 전환 및 회상 진입을 8회 반복하며 ChangeDualBGM() 크로스페이드를 연속 호출하던 중 FadeInCoroutine의 AudioSource.Play() 시점에 FMODSample 메모리 할당 실패 오류가 발생하며 BGM 출력이 중단됨.\n심각도: Critical · 우선순위: High\n관련 테스트 케이스: tc-ff-016-01 · 관련 이슈: issue-ff-016-bgm-crossfade-fmod-memory\n첨부 증거 또는 추가 확인 사항: SoundPlayer.CleanupBeforeSceneLoad()에서 StopAllBGMCoroutines() 및 clip = null 해제 추가, BGM 오디오 클립 Load Type을 Streaming(Vorbis, Preload 해제)으로 변경 후 회귀 테스트 진행 예정.\n확인된 사실: SoundPlayer.ChangeDualBGM() -> FadeInCoroutine() -> AudioSource.Play() 호출 경로에서 FMODSample 메모리 부족 오류 발생 확인.\n원인: 추정(미검증) — 씬 전환 시 이전 BGM 페이드 코루틴과 AudioSource.clip 참조 및 대용량 PCM 오디오 버퍼가 해제되지 않고 누적된 것으로 분석됨.\n\n수정 후 동일한 조건에서 확인할 수 있도록 수정 내용과 확인 결과를 회신 부탁드립니다.\n\n감사합니다.",
+      "updatedAt": "2026-10-21T19:00:00.000Z"
     }
   ]
 }

@@ -288,7 +288,7 @@
               <button class="btn btn-secondary" id="btn-load-sample-ai-json" type="button">🧪 샘플 AI 결과 JSON 넣기</button>
             </div>
             <p class="card-subtitle">Gemini, ChatGPT, Claude 등에서 생성한 JSON을 붙여넣으세요. 파싱 후 미리보기에서 필드를 수정하고 등록할 수 있습니다.</p>
-            <textarea id="tc-ai-json" class="tc-large-textarea" rows="10" placeholder='{"testCases":[{"title":"플레이어 점프 재현 테스트","purpose":"점프 입력 시 바닥을 통과하는 문제를 재현한다","preconditions":["Windows 빌드 실행","테스트 구역 진입"],"steps":["플레이어를 평평한 바닥에 세운다","점프 키를 한 번 누른다"],"expectedResults":["플레이어가 바닥을 통과하지 않는다"],"relatedIssueIds":["#1"],"priority":"High","category":"재현 테스트","platform":"Windows","status":"Draft"}]}'> </textarea>
+            <textarea id="tc-ai-json" class="tc-large-textarea" rows="10" placeholder='{"testCases":[{"title":"대화 스킵 직후 컷씬 전환 재현 테스트","purpose":"Skip 클릭 시 마지막 라인의 BLACK 컷씬과 AUTO_DELAYED 자동 진행이 정상 수행되는지 확인한다","preconditions":["Windows 빌드 실행","001_Prologue1 대화 진입"],"steps":["대화 타이핑 도중 Skip 버튼을 클릭한다","마지막 대사 출력 후 화면 전환 및 클릭 입력을 확인한다"],"expectedResults":["마지막 라인 컷씬과 자동 진행이 누락 없이 동작한다"],"relatedIssueIds":["#10"],"priority":"High","category":"재현 테스트","platform":"Windows","status":"Draft"}]}'></textarea>
             <div class="form-actions"><button class="btn btn-primary" id="btn-parse-ai-json" type="button">JSON 검수 및 미리보기</button><span id="tc-json-status" class="inline-status" role="status"></span></div>
             <div id="tc-preview-container" class="tc-preview-container" style="display:none">
               <h3>등록 전 미리보기</h3><p class="card-subtitle">필수 항목이 비어 있으면 직접 수정해 주세요. 관련 이슈 ID와 중복 가능성도 확인합니다.</p>
